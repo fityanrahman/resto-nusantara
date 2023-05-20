@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:submission_resto/widget/fav_resto_widget.dart';
+import 'package:submission_resto/widget/list_resto_widget.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home-page';
@@ -15,12 +16,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              FavRestoWidget(),
+              ListRestoWidget()
             ],
           ),
         ),
@@ -28,3 +29,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
