@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:submission_resto/common/style.dart';
 import 'package:submission_resto/ui/home_page.dart';
+import 'package:submission_resto/ui/resto_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,9 +25,10 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
       ),
-      initialRoute: HomePage.routeName,
+      initialRoute: RestaurantPage.routeName,
       routes: {
         HomePage.routeName: (context) => const HomePage(),
+        RestaurantPage.routeName: (context) => const RestaurantPage(),
       },
     );
   }
