@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:submission_resto/widget/circle_kota_widget.dart';
 import 'package:submission_resto/widget/fav_resto_widget.dart';
 import 'package:submission_resto/widget/list_resto_widget.dart';
+import 'package:submission_resto/widget/search_anchors_widget.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home-page';
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CircleKotaWidget()
+              SearchAnchors(),
             ],
           ),
         ),
@@ -30,4 +31,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

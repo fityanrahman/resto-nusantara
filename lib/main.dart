@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.dark,
       ),
-      initialRoute: RestaurantPage.routeName,
+      initialRoute: HomePage.routeName,
       routes: {
         HomePage.routeName: (context) => const HomePage(),
         RestaurantPage.routeName: (context) => const RestaurantPage(),
