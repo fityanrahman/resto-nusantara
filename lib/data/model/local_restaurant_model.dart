@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:submission_resto/data/model/restaurants_model.dart';
 
 class LocalRestaurantModel {
@@ -14,10 +16,20 @@ class LocalRestaurantModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.restaurants != null) {
-      data['restaurants'] = this.restaurants!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (restaurants != null) {
+      data['restaurants'] = restaurants!.map((v) => v.toJson()).toList();
     }
     return data;
   }
+}
+
+List<Restaurants> parseRestaurant(String? json) {
+  if (json == null) {
+    return [];
+  }
+
+  final List parsed = jsonDecode(json);
+  // print('json = $json');
+  return parsed.map((e) => Restaurants.fromJson(e)).toList();
 }
