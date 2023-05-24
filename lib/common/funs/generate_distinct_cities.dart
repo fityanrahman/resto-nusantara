@@ -15,6 +15,7 @@ List<String> generateDistinctCities(restaurants) {
   if (kDebugMode) {
     print('cityList = $cityList');
   }
+  cityList.insert(0, 'Semua');
 
   return cityList;
 }

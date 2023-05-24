@@ -35,13 +35,24 @@ class _HomePageState extends State<HomePage> {
 
         // generate specific city restaurants
         List<Restaurants> cityRestaurants = restaurants;
-        if (city == '') {
-          cityRestaurants = restaurants;
-        } else {
-          cityRestaurants =
-              restaurants.where((element) => element.city == city).toList();
-          //sort restaurant by rating
-          cityRestaurants.sort((a, b) => b.rating!.compareTo(a.rating!));
+
+        //handle data on specific city
+        switch (city) {
+          case '':
+            cityRestaurants = restaurants;
+            break;
+          case 'Semua':
+            cityRestaurants = restaurants;
+            city = 'Nusantara';
+            break;
+          case 'Nusantara':
+            cityRestaurants = restaurants;
+            break;
+          default:
+            cityRestaurants =
+                restaurants.where((element) => element.city == city).toList();
+            //sort restaurant by rating
+            cityRestaurants.sort((a, b) => b.rating!.compareTo(a.rating!));
         }
 
         //get distinct cities list
@@ -49,51 +60,105 @@ class _HomePageState extends State<HomePage> {
 
         return ListView(
           children: [
-            Container(
-              height: 100,
-              padding: const EdgeInsets.only(left: 16),
-              child: ListView.separated(
-                scrollDirection: Axis.horizontal,
-                separatorBuilder: (context, index) => const SizedBox(width: 12),
-                itemCount: cities.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      setState(() {
-                        city = cities[index];
-                        print('selectedCity = $city');
-                      });
-                    },
-                    child: CircleKotaWidget(
-                      city: cities[index],
-                    ),
-                  );
-                },
-              ),
-            ),
-            SizedBox(
-              height: 280,
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(width: 24),
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: cityRestaurants.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                      left: index == 0 ? 16 : 0,
-                      right: index == cityRestaurants.length - 1 ? 16 : 0,
-                    ),
-                    child: FavRestoWidget(
-                      restaurants: cityRestaurants[index],
-                    ),
-                  );
-                },
-              ),
-            ),
+            _listKota(cities),
+            _listFavResto(cityRestaurants),
+            _listRestoNusa(restaurants)
           ],
         );
       },
+    );
+  }
+
+  Widget _listRestoNusa(List<Restaurants> restaurants) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(top: 28, bottom: 16, left: 16.0),
+          child: Text('Restoran Nusantara'),
+        ),
+        ListView.separated(
+            separatorBuilder: (context, index) => const SizedBox(height: 12),
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: restaurants.length,
+            itemBuilder: (context, index) {
+              return Padding(
+
+                padding: EdgeInsets.only(
+                  left: 16.0,
+                  right: 16.0,
+                  top: 0.0,
+                  bottom: index == restaurants.length - 1 ? 16 : 0,
+                ),
+                child: ListRestoWidget(
+                  restaurants: restaurants[index],
+                ),
+              );
+            }),
+      ],
+    );
+  }
+
+  Widget _listFavResto(List<Restaurants> cityRestaurants) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 28, bottom: 16, left: 16.0),
+          child: Text('Restoran Favorit di ${city == '' ? 'Nusantara' : city}'),
+        ),
+        SizedBox(
+          height: 280,
+          child: ListView.separated(
+            separatorBuilder: (context, index) => const SizedBox(width: 24),
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemCount: cityRestaurants.length,
+            itemBuilder: (context, index) {
+              return Padding(
+                padding: EdgeInsets.only(
+                  left: index == 0 ? 16 : 0,
+                  right: index == cityRestaurants.length - 1 ? 16 : 0,
+                ),
+                child: FavRestoWidget(
+                  restaurants: cityRestaurants[index],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _listKota(List<String> cities) {
+    return SizedBox(
+      height: 80,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        separatorBuilder: (context, index) => const SizedBox(width: 12),
+        itemCount: cities.length,
+        itemBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.only(
+              left: index == 0 ? 16 : 0,
+              right: index == cities.length - 1 ? 16 : 0,
+            ),
+            child: InkWell(
+              onTap: () {
+                setState(() {
+                  city = cities[index];
+                  print('selectedCity = $city');
+                });
+              },
+              child: CircleKotaWidget(
+                city: cities[index],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
