@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/common/funs/generate_distinct_cities.dart';
 import 'package:submission_resto/data/model/local_restaurant_model.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
 import 'package:submission_resto/widget/circle_kota_widget.dart';
@@ -35,15 +36,18 @@ class HomePage extends StatelessWidget {
           .loadString('assets/local_restaurant.json'),
       builder: (context, snapshot) {
         final List<Restaurants> restaurants = parseRestaurant(snapshot.data);
+        // generate specific city restaurants
+        final cityRestaurants = restaurants.where((element) => element.city == 'Medan').toList();
+        generateDistinctCities(restaurants);
 
         return ListView.separated(
           separatorBuilder: (context, index) => const SizedBox(width: 24),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          itemCount: restaurants.length,
+          itemCount: cityRestaurants.length,
           itemBuilder: (context, index) {
             return FavRestoWidget(
-              restaurants: restaurants[index],
+              restaurants: cityRestaurants[index],
             );
           },
         );
