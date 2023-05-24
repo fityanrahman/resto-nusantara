@@ -6,7 +6,7 @@ class Restaurants {
   String? description;
   String? pictureId;
   String? city;
-  String? rating;
+  double? rating;
   Menus? menus;
 
   Restaurants(
@@ -24,7 +24,7 @@ class Restaurants {
     description = json['description'];
     pictureId = json['pictureId'];
     city = json['city'];
-    rating = json['rating'].toString();
+    rating = json['rating'].toDouble();
     menus = json['menus'] != null ? new Menus.fromJson(json['menus']) : null;
   }
 

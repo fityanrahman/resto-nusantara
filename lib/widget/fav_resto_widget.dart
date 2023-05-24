@@ -37,7 +37,7 @@ class FavRestoWidget extends StatelessWidget {
           Row(
             children: [
               const Icon(Icons.star),
-              Text(restaurants.rating!),
+              Text(restaurants.rating!.toString()),
             ],
           )
         ],

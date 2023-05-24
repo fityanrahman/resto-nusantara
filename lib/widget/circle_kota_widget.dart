@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CircleKotaWidget extends StatelessWidget {
+  final String city;
+
   const CircleKotaWidget({
+    required this.city,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 50,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -25,8 +28,8 @@ class CircleKotaWidget extends StatelessWidget {
           const SizedBox(
             height: 4,
           ),
-          const Text(
-            'Kota 1',
+          Text(
+            city,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           )
