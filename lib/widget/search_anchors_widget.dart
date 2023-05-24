@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/data/model/restaurants_model.dart';
 
 class SearchAnchors extends StatefulWidget {
-  const SearchAnchors({Key? key}) : super(key: key);
+  final List<Restaurants> restaurants;
+
+  const SearchAnchors({required this.restaurants, Key? key}) : super(key: key);
 
   @override
   State<SearchAnchors> createState() => _SearchAnchorsState();
@@ -9,22 +12,23 @@ class SearchAnchors extends StatefulWidget {
 
 class _SearchAnchorsState extends State<SearchAnchors> {
   String? selectedColor;
-  List<ColorItem> searchHistory = <ColorItem>[];
+  List<Restaurants> searchHistory = <Restaurants>[];
 
   Iterable<Widget> getHistoryList(SearchController controller) {
     return searchHistory.map(
-          (color) => ListTile(
-        leading: Text(color.label),
+      (color) => ListTile(
+        leading: const Icon(Icons.history),
+        title: Text(color.name!),
         trailing: IconButton(
-          icon: Icon(Icons.call_missed),
+          icon: const Icon(Icons.transit_enterexit),
           onPressed: () {
-            controller.text = color.label;
+            controller.text = color.name!;
             controller.selection =
                 TextSelection.collapsed(offset: controller.text.length);
           },
         ),
         onTap: () {
-          controller.closeView(color.label);
+          controller.closeView(color.name!);
           handleSelection(color);
         },
       ),
@@ -33,29 +37,45 @@ class _SearchAnchorsState extends State<SearchAnchors> {
 
   Iterable<Widget> getSuggestions(SearchController controller) {
     final String input = controller.value.text;
-    return ColorItem.values.where((color) => color.label.contains(input)).map(
+    return widget.restaurants
+        .where((color) =>
+            color.name!.toLowerCase().contains(input.toLowerCase()) ||
+            color.city!.toLowerCase().contains(input.toLowerCase()) ||
+            color.description!.toLowerCase().contains(input.toLowerCase()))
+        .map(
           (filteredColor) => ListTile(
-        leading: CircleAvatar(backgroundColor: filteredColor.color),
-        title: Text(filteredColor.label),
-        trailing: IconButton(
-          icon: Icon(Icons.call_missed),
-          onPressed: () {
-            controller.text = filteredColor.label;
-            controller.selection =
-                TextSelection.collapsed(offset: controller.text.length);
-          },
-        ),
-        onTap: () {
-          controller.closeView(filteredColor.label);
-          handleSelection(filteredColor);
-        },
-      ),
-    );
+            leading: ClipOval(
+              child: Image.network(
+                filteredColor.pictureId!,
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+                errorBuilder: (ctx, error, _) =>
+                    const Center(child: Icon(Icons.error)),
+              ),
+            ),
+            title: Text(filteredColor.name!),
+            trailing: IconButton(
+              icon: const Icon(Icons.transit_enterexit),
+              onPressed: () {
+                controller.text = filteredColor.name!;
+                controller.selection =
+                    TextSelection.collapsed(offset: controller.text.length);
+              },
+            ),
+            onTap: () {
+              controller.closeView(filteredColor.name!);
+              handleSelection(filteredColor);
+            },
+          ),
+        );
   }
 
-  void handleSelection(ColorItem color) {
+  void handleSelection(Restaurants color) {
+    print('klik item');
+
     setState(() {
-      selectedColor = color.label;
+      selectedColor = color.name;
       if (searchHistory.length >= 5) {
         searchHistory.removeLast();
       }
@@ -65,48 +85,27 @@ class _SearchAnchorsState extends State<SearchAnchors> {
 
   @override
   Widget build(BuildContext context) {
-    return SearchAnchor.bar(
-      barHintText: 'Search Color',
-      suggestionsBuilder: (context, controller) {
-        if (controller.text.isEmpty) {
-          if (searchHistory.isNotEmpty) {
-            return getHistoryList(controller);
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SearchAnchor.bar(
+        barHintText: 'Cari Restoran',
+        suggestionsBuilder: (context, controller) {
+          if (controller.text.isEmpty) {
+            if (searchHistory.isNotEmpty) {
+              return getHistoryList(controller);
+            }
+            return <Widget>[
+              const Center(
+                child: Text(
+                  'Tidak ada riwayat pencarian',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              )
+            ];
           }
-          return <Widget>[
-            Center(
-              child: Text(
-                'No Search History',
-                style: TextStyle(color: Colors.grey),
-              ),
-            )
-          ];
-        }
-        return getSuggestions(controller);
-      },
+          return getSuggestions(controller);
+        },
+      ),
     );
   }
-}
-
-enum ColorItem {
-  red('red', Colors.red),
-  orange('orange', Colors.orange),
-  yellow('yellow', Colors.yellow),
-  green('green', Colors.green),
-  blue('blue', Colors.blue),
-  indigo('indigo', Colors.indigo),
-  violet('violet', Color(0xFF8F00FF)),
-  purple('purple', Colors.purple),
-  pink('pink', Colors.pink),
-  silver('silver', Color(0xFF808080)),
-  gold('gold', Color(0xFFFFD700)),
-  beige('beige', Color(0xFFF5F5DC)),
-  brown('brown', Colors.brown),
-  grey('grey', Colors.grey),
-  black('black', Colors.black),
-  white('white', Colors.white);
-
-  const ColorItem(this.label, this.color);
-
-  final String label;
-  final Color color;
 }

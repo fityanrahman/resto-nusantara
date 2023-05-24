@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
 
         return ListView(
           children: [
+            SearchAnchors(restaurants: restaurants),
             _listKota(cities),
             _listFavResto(cityRestaurants),
             _listRestoNusa(restaurants)
@@ -78,24 +79,24 @@ class _HomePageState extends State<HomePage> {
           child: Text('Restoran Nusantara'),
         ),
         ListView.separated(
-            separatorBuilder: (context, index) => const SizedBox(height: 12),
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: restaurants.length,
-            itemBuilder: (context, index) {
-              return Padding(
-
-                padding: EdgeInsets.only(
-                  left: 16.0,
-                  right: 16.0,
-                  top: 0.0,
-                  bottom: index == restaurants.length - 1 ? 16 : 0,
-                ),
-                child: ListRestoWidget(
-                  restaurants: restaurants[index],
-                ),
-              );
-            }),
+          separatorBuilder: (context, index) => const SizedBox(height: 12),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: restaurants.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 16.0,
+                right: 16.0,
+                top: 0.0,
+                bottom: index == restaurants.length - 1 ? 16 : 0,
+              ),
+              child: ListRestoWidget(
+                restaurants: restaurants[index],
+              ),
+            );
+          },
+        ),
       ],
     );
   }
