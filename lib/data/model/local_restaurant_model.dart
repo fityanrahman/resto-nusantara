@@ -29,7 +29,7 @@ List<Restaurants> parseRestaurant(String? json) {
     return [];
   }
 
-  final List parsed = jsonDecode(json);
-  // print('json = $json');
-  return parsed.map((e) => Restaurants.fromJson(e)).toList();
+  var parsed = jsonDecode(json);
+  final List parsedRestos = parsed['restaurants'];
+  return parsedRestos.map((e) => Restaurants.fromJson(e)).toList();
 }

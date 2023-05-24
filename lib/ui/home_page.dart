@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:submission_resto/data/model/local_restaurant_model.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
@@ -36,27 +34,19 @@ class HomePage extends StatelessWidget {
       future: DefaultAssetBundle.of(context)
           .loadString('assets/local_restaurant.json'),
       builder: (context, snapshot) {
-        var data = snapshot.data;
-        if (data == null) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else {
-          final LocalRestaurantModel localRestaurants =
-              LocalRestaurantModel.fromJson(jsonDecode(data));
+        final List<Restaurants> restaurants = parseRestaurant(snapshot.data);
 
-          return ListView.separated(
-            separatorBuilder: (context, index) => SizedBox(width: 24),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: localRestaurants.restaurants!.length,
-            itemBuilder: (context, index) {
-              return FavRestoWidget(
-                restaurants: localRestaurants.restaurants![index],
-              );
-            },
-          );
-        }
+        return ListView.separated(
+          separatorBuilder: (context, index) => const SizedBox(width: 24),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: restaurants.length,
+          itemBuilder: (context, index) {
+            return FavRestoWidget(
+              restaurants: restaurants[index],
+            );
+          },
+        );
       },
     );
   }
