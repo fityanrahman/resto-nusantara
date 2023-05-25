@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:submission_resto/common/funs/generate_distinct_cities.dart';
 import 'package:submission_resto/data/model/local_restaurant_model.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
+import 'package:submission_resto/ui/resto_page.dart';
 import 'package:submission_resto/widget/circle_kota_widget.dart';
 import 'package:submission_resto/widget/fav_resto_widget.dart';
 import 'package:submission_resto/widget/list_resto_widget.dart';
@@ -122,8 +123,13 @@ class _HomePageState extends State<HomePage> {
                   left: index == 0 ? 16 : 0,
                   right: index == cityRestaurants.length - 1 ? 16 : 0,
                 ),
-                child: FavRestoWidget(
-                  restaurants: cityRestaurants[index],
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantPage()));
+                  },
+                  child: FavRestoWidget(
+                    restaurants: cityRestaurants[index],
+                  ),
                 ),
               );
             },

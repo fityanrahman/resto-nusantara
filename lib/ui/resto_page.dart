@@ -19,10 +19,75 @@ class _RestaurantPageState extends State<RestaurantPage> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          // child: _itemRestoWidget(textTheme),
-          child: AddToCartButton(),
+      body: NestedScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              pinned: true,
+              expandedHeight: 280,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Image.network(
+                  'https://restaurant-api.dicoding.dev/images/medium/14',
+                  fit: BoxFit.cover,
+                  errorBuilder: (ctx, error, _) =>
+                      const Center(child: Icon(Icons.error)),
+                ),
+                centerTitle: true,
+                // titlePadding: EdgeInsets.zero,
+                title: const Text('Tempat Siang Hari'),
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.star_outline),
+                ),
+              ],
+            ),
+          ];
+        },
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Detail Restaurant',
+                ),
+                Text(
+                  'Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus.  Maecenas tempusMaecenas tempusMaecenas tempusMaecenas tempus',
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.justify,
+                ),
+                SizedBox(
+                  height: 28,
+                ),
+                Text(
+                  'Makanan',
+                ),
+                _itemRestoWidget(textTheme),
+                SizedBox(
+                  height: 28,
+                ),
+                Text(
+                  'Minuman',
+                ),
+                _itemRestoWidget(textTheme),
+              ],
+            ),
+          ),
+        ),
+      ),
+      extendBody: true,
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(16),
+        child: SizedBox
+          (
+          height: 72,
+            child: AddToCartButton()
         ),
       ),
     );
@@ -81,9 +146,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
                             children: [
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  shape: CircleBorder(),
+                                  shape: const CircleBorder(),
                                   minimumSize: Size.zero,
-                                  fixedSize: Size(24, 24),
+                                  fixedSize: const Size(24, 24),
                                   padding: EdgeInsets.zero,
                                 ),
                                 onPressed: () {
@@ -92,7 +157,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                     print('menu : $menu');
                                   });
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.remove,
                                   size: 16,
                                 ),
@@ -104,9 +169,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  shape: CircleBorder(),
+                                  shape: const CircleBorder(),
                                   minimumSize: Size.zero,
-                                  fixedSize: Size(24, 24),
+                                  fixedSize: const Size(24, 24),
                                   padding: EdgeInsets.zero,
                                 ),
                                 onPressed: () {
@@ -115,25 +180,25 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                     print('menu : $menu');
                                   });
                                 },
-                                child: Icon(
+                                child: const Icon(
                                   Icons.add,
                                   size: 16,
                                 ),
                               ),
                             ],
                           ),
-                    InkWell(
-                      onTap: () {
+                    IconButton(
+                      onPressed: () {
                         setState(() {
                           fav = !fav;
                           print(fav);
                         });
                       },
-                      child: Icon(
+                      icon: Icon(
                         fav ? Icons.star : Icons.star_outline,
                         color: Colors.orangeAccent,
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
@@ -144,4 +209,3 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 }
-
