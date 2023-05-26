@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/widget/add_to_cart_button.dart';
 
 class RestaurantPage extends StatefulWidget {
@@ -21,7 +22,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     return Scaffold(
       body: NestedScrollView(
         physics: NeverScrollableScrollPhysics(),
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
+        headerSliverBuilder: (context, isScrolled) {
           return [
             SliverAppBar(
               pinned: true,
@@ -84,11 +85,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
       extendBody: true,
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(16),
-        child: SizedBox
-          (
-          height: 72,
-            child: AddToCartButton()
-        ),
+        child: SizedBox(
+            height: 72,
+            child: AddToCartButton(
+              onPress: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CartPage()));
+              },
+            )),
       ),
     );
   }
