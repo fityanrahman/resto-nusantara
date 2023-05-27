@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/data/model/restaurants_model.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/widget/add_to_cart_button.dart';
 
 class RestaurantPage extends StatefulWidget {
   static const routeName = '/resto-page';
 
-  const RestaurantPage({Key? key}) : super(key: key);
+  final Restaurants restaurants;
+
+  const RestaurantPage({required this.restaurants, Key? key}) : super(key: key);
 
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -29,14 +32,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
               expandedHeight: 280,
               flexibleSpace: FlexibleSpaceBar(
                 background: Image.network(
-                  'https://restaurant-api.dicoding.dev/images/medium/14',
+                  widget.restaurants.pictureId!,
                   fit: BoxFit.cover,
                   errorBuilder: (ctx, error, _) =>
                       const Center(child: Icon(Icons.error)),
                 ),
                 centerTitle: true,
                 // titlePadding: EdgeInsets.zero,
-                title: const Text('Tempat Siang Hari'),
+                title: Text(widget.restaurants.name!),
               ),
               actions: [
                 IconButton(

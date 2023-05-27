@@ -92,8 +92,13 @@ class _HomePageState extends State<HomePage> {
                 top: 0.0,
                 bottom: index == restaurants.length - 1 ? 16 : 0,
               ),
-              child: ListRestoWidget(
-                restaurants: restaurants[index],
+              child: InkWell(
+                onTap: (){
+                  Navigator.pushNamed(context, RestaurantPage.routeName, arguments: restaurants[index]);
+                },
+                child: ListRestoWidget(
+                  restaurants: restaurants[index],
+                ),
               ),
             );
           },
@@ -125,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => RestaurantPage()));
+                    Navigator.pushNamed(context, RestaurantPage.routeName, arguments: cityRestaurants[index]);
                   },
                   child: FavRestoWidget(
                     restaurants: cityRestaurants[index],

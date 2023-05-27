@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
+import 'package:submission_resto/ui/resto_page.dart';
 
 class SearchAnchors extends StatefulWidget {
   final List<Restaurants> restaurants;
@@ -72,7 +73,6 @@ class _SearchAnchorsState extends State<SearchAnchors> {
   }
 
   void handleSelection(Restaurants color) {
-    print('klik item');
 
     setState(() {
       selectedColor = color.name;
@@ -81,6 +81,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       }
       searchHistory.insert(0, color);
     });
+    Navigator.pushNamed(context, RestaurantPage.routeName, arguments: color);
   }
 
   @override
