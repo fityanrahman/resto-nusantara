@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/data/model/foods_model.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
+import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/widget/add_to_cart_button.dart';
 
@@ -8,15 +10,13 @@ class RestaurantPage extends StatefulWidget {
 
   final Restaurants restaurants;
 
-  const RestaurantPage({required this.restaurants, Key? key}) : super(key: key);
+  RestaurantPage({required this.restaurants, Key? key}) : super(key: key);
 
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
-  var menu = 0;
-  var fav = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
     return Scaffold(
       body: NestedScrollView(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         headerSliverBuilder: (context, isScrolled) {
           return [
             SliverAppBar(
@@ -57,29 +57,29 @@ class _RestaurantPageState extends State<RestaurantPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Detail Restaurant',
                 ),
                 Text(
-                  'Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus.  Maecenas tempusMaecenas tempusMaecenas tempusMaecenas tempus',
+                  widget.restaurants.description!,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.justify,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 28,
                 ),
-                Text(
+                const Text(
                   'Makanan',
                 ),
-                _itemRestoWidget(textTheme),
-                SizedBox(
+                _itemRestoWidget(textTheme, widget.restaurants.menus!.foods),
+                const SizedBox(
                   height: 28,
                 ),
-                Text(
+                const Text(
                   'Minuman',
                 ),
-                _itemRestoWidget(textTheme),
+                _itemRestoWidget(textTheme, widget.restaurants.menus!.drinks),
               ],
             ),
           ),
@@ -87,23 +87,64 @@ class _RestaurantPageState extends State<RestaurantPage> {
       ),
       extendBody: true,
       bottomNavigationBar: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: SizedBox(
             height: 72,
             child: AddToCartButton(
               onPress: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CartPage()));
+                    MaterialPageRoute(builder: (context) => const CartPage()));
               },
             )),
       ),
     );
   }
 
-  Widget _itemRestoWidget(TextTheme textTheme) {
-    return Column(
-      children: [
-        Container(
+  Widget _itemRestoWidget(TextTheme textTheme, List<Foods>? food) {
+    List<Order> order = [];
+
+    for (int i = 0; i < food!.length; i++) {
+      order.add(Order(id: i+1, name: food[i].name!, qty: 0, fav: false, price: 12000));
+    }
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: order.length,
+      itemBuilder: (context, index) {
+        return ItemRestoWidget(textTheme: textTheme, order: order[index]);
+      },
+    );
+  }
+}
+
+class ItemRestoWidget extends StatefulWidget {
+  final TextTheme textTheme;
+  Order order;
+
+  ItemRestoWidget({
+    required this.textTheme,
+    required this.order,
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<ItemRestoWidget> createState() => _ItemRestoWidgetState();
+}
+
+class _ItemRestoWidgetState extends State<ItemRestoWidget> {
+  // int itemQty = 0;
+  // bool itemFav = false;
+
+  List<Order> transaction = [];
+  List<int> itemCounts = [];
+
+  var idSet = <int>{};
+  var distinct = <Order>[];
+
+  @override
+  Widget build(BuildContext context) {
+        return Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: const BoxDecoration(
@@ -128,25 +169,30 @@ class _RestaurantPageState extends State<RestaurantPage> {
                         const Center(child: Icon(Icons.error)),
                   ),
                 ),
-                title: const Text('Kari kacang dan telur'),
-                subtitle: const Text('Rp 10.000'),
+                title: Text(widget.order.name),
+                subtitle: Text('Rp ${widget.order.price.toString()}'),
               ),
               Padding(
-                padding: EdgeInsets.only(left: menu == 0 ? 16 : 0, right: 16),
+                padding: EdgeInsets.only(
+                    left: widget.order.qty == 0 ? 16 : 0, right: 16),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    menu == 0
+                    widget.order.qty == 0
                         ? ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                menu++;
-                                print('menu : $menu');
+                                widget.order.qty++;
+                                // itemQty = widget.order.qty;
+                                // itemQty++;
+                                _addTransaction(widget.order);
+                                // print('menu widget : ${widget.order.qty}');
+                                // print('menu state : $itemQty');
                               });
                             },
                             child: Text(
                               'Tambah',
-                              style: textTheme.labelSmall,
+                              style: widget.textTheme.labelSmall,
                             ),
                           )
                         : Row(
@@ -160,8 +206,12 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    menu--;
-                                    print('menu : $menu');
+                                    widget.order.qty--;
+                                    // itemQty = widget.order.qty;
+                                    // itemQty--;
+                                    _addTransaction(widget.order);
+                                    // print('menu widget : ${widget.order.qty}');
+                                    // print('menu state : $itemQty');
                                   });
                                 },
                                 child: const Icon(
@@ -170,9 +220,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 12),
-                                child: Text(menu.toString()),
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                child: Text(widget.order.qty.toString()),
+                                // child: Text(itemQty.toString()),
                               ),
                               ElevatedButton(
                                 style: ElevatedButton.styleFrom(
@@ -183,8 +233,12 @@ class _RestaurantPageState extends State<RestaurantPage> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    menu++;
-                                    print('menu : $menu');
+                                    widget.order.qty++;
+                                    // itemQty = widget.order.qty;
+                                    // itemQty++;
+                                    _addTransaction(widget.order);
+                                    // print('menu widget : ${widget.order.qty}');
+                                    // print('menu state : $itemQty');
                                   });
                                 },
                                 child: const Icon(
@@ -197,12 +251,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     IconButton(
                       onPressed: () {
                         setState(() {
-                          fav = !fav;
-                          print(fav);
+                          widget.order.fav = !widget.order.fav;
+                          // itemFav = widget.order.fav;
+                          print('fav widget : ${widget.order.fav}');
+                          // print('fav state : $itemFav');
                         });
                       },
                       icon: Icon(
-                        fav ? Icons.star : Icons.star_outline,
+                        widget.order.fav ? Icons.star : Icons.star_outline,
                         color: Colors.orangeAccent,
                       ),
                     )
@@ -211,8 +267,78 @@ class _RestaurantPageState extends State<RestaurantPage> {
               ),
             ],
           ),
-        ),
-      ],
-    );
+        );
   }
+
+  //add transaction was here
+  void _addTransaction(Order order) {
+    // List<Order> transaction = [];
+    // List<int> itemCount = [];
+
+    transaction.add(order);
+
+    // var idSet = <int>{};
+    // var distinct = <Order>[];
+    for (var d in transaction) {
+      if (idSet.add(d.id)) {
+        distinct.add(d);
+      }
+    }
+
+    print('last id = ${distinct.last.id}');
+    print('distinct =  ${distinct.length}');
+
+    // if (order.qty < 1) {
+    //   transaction.remove(order);
+    //   print('remove $order');
+    // }
+
+
+    // for (int i = 0; i < transaction.length; i++) {
+    //   itemCount.add(transaction[i].qty);
+    // }
+
+    for (var a in distinct) {
+      itemCounts.add(a.qty);
+    }
+
+    print('transactions = ${distinct.toList().toString()}');
+
+    // itemCount.add(order.qty);
+    //
+    print('itemCount = $itemCounts');
+
+    print('tambah name order ${order.name}');
+    print('tambah qty order ${order.qty}');
+    print('tambah order ${transaction.length}');
+    countTransaction(distinct);
+  }
+}
+
+Map<String, dynamic> countTransaction(List<Order> transaction) {
+  int count;
+  int sum = 0;
+  var listSum = [];
+  Map<String, int> summary;
+
+  count = transaction.length;
+
+  for (int i = 0; i < transaction.length; i++) {
+    listSum.add(transaction[i].qty * transaction[i].price);
+  }
+
+  // int sums => listSum.fold(0, (e, t) => e + t);
+
+  for (int e in listSum) {
+    sum += e;
+  }
+
+  summary = {
+    'count': count,
+    'sum': sum,
+  };
+
+  print('hitung transaksi $summary');
+
+  return summary;
 }

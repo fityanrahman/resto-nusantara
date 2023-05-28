@@ -1,9 +1,8 @@
-import 'package:submission_resto/data/model/drinks_model.dart';
 import 'package:submission_resto/data/model/foods_model.dart';
 
 class Menus {
   List<Foods>? foods;
-  List<Drinks>? drinks;
+  List<Foods>? drinks;
 
   Menus({this.foods, this.drinks});
 
@@ -21,7 +20,7 @@ class Menus {
       //   drinks!.add(new Drinks.fromJson(v));
       // });
       drinks = json['drinks']
-          .map<Drinks>((drink) => Drinks.fromJson(drink))
+          .map<Foods>((drink) => Foods.fromJson(drink))
           .toList();
     }
   }

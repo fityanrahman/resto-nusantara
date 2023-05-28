@@ -24,7 +24,9 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return Scaffold(body: _buildListRestoFav(context));
+    return Scaffold(
+      body: _buildListRestoFav(context),
+    );
   }
 
   FutureBuilder<String> _buildListRestoFav(BuildContext context) {
@@ -93,8 +95,9 @@ class _HomePageState extends State<HomePage> {
                 bottom: index == restaurants.length - 1 ? 16 : 0,
               ),
               child: InkWell(
-                onTap: (){
-                  Navigator.pushNamed(context, RestaurantPage.routeName, arguments: restaurants[index]);
+                onTap: () {
+                  Navigator.pushNamed(context, RestaurantPage.routeName,
+                      arguments: restaurants[index]);
                 },
                 child: ListRestoWidget(
                   restaurants: restaurants[index],
@@ -130,7 +133,8 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: InkWell(
                   onTap: () {
-                    Navigator.pushNamed(context, RestaurantPage.routeName, arguments: cityRestaurants[index]);
+                    Navigator.pushNamed(context, RestaurantPage.routeName,
+                        arguments: cityRestaurants[index]);
                   },
                   child: FavRestoWidget(
                     restaurants: cityRestaurants[index],
