@@ -202,8 +202,13 @@ class _CartPageState extends State<CartPage> {
                   child: Image.network(
                     'https://restaurant-api.dicoding.dev/images/medium/14',
                     fit: BoxFit.cover,
-                    errorBuilder: (ctx, error, _) =>
-                        const Center(child: Icon(Icons.error)),
+                    errorBuilder: (ctx, error, _) => AspectRatio(
+                      aspectRatio: 1,
+                      child: Container(
+                        color: Colors.grey,
+                        child: const Icon(Icons.error),
+                      ),
+                    ),
                   ),
                 ),
                 title: const Text('Kari kacang dan telur'),
@@ -298,12 +303,15 @@ class _CartPageState extends State<CartPage> {
     return AlertDialog(
       icon: Icon(Icons.check_circle),
       title: Center(child: Text('Order Berhasil')),
-      content: Text('Pesanan akan segera diproses oleh restoran, dan akan segera dikirim ke alamat anda oleh driver. '),
+      content: Text(
+          'Pesanan akan segera diproses oleh restoran, dan akan segera dikirim ke alamat anda oleh driver. '),
       actions: [
-        TextButton(onPressed: () {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => HomePage()));
-        }, child: Text('OK')),
+        TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
+            },
+            child: Text('OK')),
       ],
     );
   }

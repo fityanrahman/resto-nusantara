@@ -25,10 +25,10 @@ class _AddToCartButtonState extends State<AddToCartButton> {
 
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 24),
       ),
       onPressed: widget.onPress,
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -36,9 +36,10 @@ class _AddToCartButtonState extends State<AddToCartButton> {
             flex: 1,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(widget.itemCount.toString()),
-                Text(widget.restoName),
+                Text('Lanjut Bayar'),
+                // Text(widget.restoName),
               ],
             ),
           ),
@@ -47,8 +48,6 @@ class _AddToCartButtonState extends State<AddToCartButton> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text(widget.amount.toString()),
-                SizedBox(width: 8),
                 Icon(Icons.shopping_cart),
               ],
             ),

@@ -22,8 +22,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
       body: _buildListRestoFav(context),
     );
@@ -165,7 +163,6 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 setState(() {
                   city = cities[index];
-                  print('selectedCity = $city');
                 });
               },
               child: CircleKotaWidget(

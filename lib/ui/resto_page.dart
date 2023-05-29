@@ -4,6 +4,7 @@ import 'package:submission_resto/data/model/restaurants_model.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/widget/add_to_cart_button.dart';
+import 'package:submission_resto/widget/item_resto_widget.dart';
 
 class RestaurantPage extends StatefulWidget {
   static const routeName = '/resto-page';
@@ -21,7 +22,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
   var idSet = <String>{};
   var distinct = <Order>[];
 
-  // Map<String, int> _finalSummary = {};
   List<int> subTotal = [];
   List<int> hitungItem = [];
   int _itemHitung = 0;
@@ -47,7 +47,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
                       const Center(child: Icon(Icons.error)),
                 ),
                 centerTitle: true,
-                // titlePadding: EdgeInsets.zero,
                 title: Text(widget.restaurants.name!),
               ),
               actions: [
@@ -66,51 +65,55 @@ class _RestaurantPageState extends State<RestaurantPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Detail Restaurant',
-                ),
-                Text(
-                  widget.restaurants.description!,
-                  maxLines: 3,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.justify,
-                ),
-                const SizedBox(
-                  height: 28,
-                ),
-                const Text(
-                  'Makanan',
-                ),
+                _detailResto(),
                 _itemRestoWidget(
-                    textTheme, widget.restaurants.menus!.foods, 'food'),
-                const SizedBox(
-                  height: 28,
-                ),
-                const Text(
-                  'Minuman',
-                ),
+                    textTheme, widget.restaurants.menus!.foods, 'Makanan'),
                 _itemRestoWidget(
-                    textTheme, widget.restaurants.menus!.drinks, 'drink'),
+                    textTheme, widget.restaurants.menus!.drinks, 'Minuman'),
               ],
             ),
           ),
         ),
       ),
       extendBody: true,
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          height: 72,
-          child: AddToCartButton(
-            onPress: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const CartPage()));
-            },
-            itemCount: _itemHitung,
-            amount: _itemHarga,
-            restoName: widget.restaurants.name!,
-          ),
+      bottomNavigationBar: _lanjutBayar(context),
+    );
+  }
+
+  Widget _lanjutBayar(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        height: 60,
+        child: AddToCartButton(
+          onPress: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const CartPage()));
+          },
+          itemCount: _itemHitung,
+          amount: _itemHarga,
+          restoName: widget.restaurants.name!,
         ),
+      ),
+    );
+  }
+
+  Widget _detailResto() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 28.0),
+      child: Column(
+        children: [
+          const Text(
+            'Detail Restaurant',
+          ),
+          const SizedBox(height: 16),
+          Text(
+            widget.restaurants.description!,
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.justify,
+          ),
+        ],
       ),
     );
   }
@@ -119,25 +122,38 @@ class _RestaurantPageState extends State<RestaurantPage> {
     List<Order> order = [];
 
     for (int i = 0; i < food!.length; i++) {
-      order.add(Order(
-          id: '$type${i + 1}',
-          name: food[i].name!,
-          qty: 0,
-          fav: false,
-          price: 12000));
+      order.add(
+        Order(
+            id: '$type${i + 1}',
+            name: food[i].name!,
+            qty: 0,
+            fav: false,
+            price: 12000),
+      );
     }
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: order.length,
-      itemBuilder: (context, index) {
-        return ItemRestoWidget(
-          textTheme: textTheme,
-          order: order[index],
-          tambahTransaksi: _tambahTransaksi,
-        );
-      },
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 28.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            type,
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: order.length,
+            itemBuilder: (context, index) {
+              return ItemRestoWidget(
+                textTheme: textTheme,
+                order: order[index],
+                tambahTransaksi: _tambahTransaksi,
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 
@@ -151,8 +167,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
     transaksi.add(order);
 
-    print('jumlah transaksi = ${transaksi.length}');
-
     for (var d in transaksi) {
       if (idSet.add(d.id)) {
         distinct.add(d);
@@ -160,9 +174,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
     }
 
     transaksi.clear();
-
-    print('jumlah transaksi 2 = ${transaksi.length}');
-    print('menu unik = ${distinct.length}');
 
     for (var d in distinct) {
       hitungItem.add(d.qty);
@@ -172,8 +183,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
       _itemHitung += e;
     }
 
-    print('jumlah pesanan: $_itemHitung');
-
     for (var j in distinct) {
       subTotal.add(j.qty * j.price);
     }
@@ -181,165 +190,5 @@ class _RestaurantPageState extends State<RestaurantPage> {
     for (int j in subTotal) {
       _itemHarga += j;
     }
-
-    print('total pesanan: $_itemHarga');
-
-    //   Map<String, int> summary = {
-    //     'itemCount': jmlItem,
-    //     'amount': grandTotal,
-    //   };
-    //
-    // var mapKeys = summary.keys; //get all keys
-    // var mapValues = summary.values; //get all values
-    // print(mapKeys);
-    // print(mapValues);
-
-    // setState(() {
-    //   _itemHitung = jmlItem;
-    //   _itemHarga = grandTotal;
-    // });
-  }
-}
-
-class ItemRestoWidget extends StatefulWidget {
-  final TextTheme textTheme;
-  final Order order;
-  final Function tambahTransaksi;
-
-  const ItemRestoWidget({
-    required this.textTheme,
-    required this.order,
-    required this.tambahTransaksi,
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<ItemRestoWidget> createState() => _ItemRestoWidgetState();
-}
-
-class _ItemRestoWidgetState extends State<ItemRestoWidget> {
-  List<Order> transaction = [];
-  List<int> itemCounts = [];
-
-  var idSet = <int>{};
-  var distinct = <Order>[];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 12),
-      decoration: const BoxDecoration(
-        border: Border.symmetric(
-          horizontal: BorderSide(
-            color: Color(0xffd9d9d9),
-          ),
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            leading: ClipRRect(
-              borderRadius: const BorderRadius.all(
-                Radius.circular(8),
-              ),
-              child: Image.network(
-                'https://restaurant-api.dicoding.dev/images/medium/14',
-                fit: BoxFit.cover,
-                errorBuilder: (ctx, error, _) =>
-                    const Center(child: Icon(Icons.error)),
-              ),
-            ),
-            title: Text(widget.order.name),
-            subtitle: Text('Rp ${widget.order.price.toString()}'),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: widget.order.qty == 0 ? 16 : 0, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                widget.order.qty == 0
-                    ? ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            widget.order.qty++;
-                            _addTransaction(widget.order);
-                          });
-                        },
-                        child: Text(
-                          'Tambah',
-                          style: widget.textTheme.labelSmall,
-                        ),
-                      )
-                    : Row(
-                        children: [
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: const CircleBorder(),
-                              minimumSize: Size.zero,
-                              fixedSize: const Size(24, 24),
-                              padding: EdgeInsets.zero,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                widget.order.qty--;
-                                _addTransaction(widget.order);
-                              });
-                            },
-                            child: const Icon(
-                              Icons.remove,
-                              size: 16,
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: Text(widget.order.qty.toString()),
-                          ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: const CircleBorder(),
-                              minimumSize: Size.zero,
-                              fixedSize: const Size(24, 24),
-                              padding: EdgeInsets.zero,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                widget.order.qty++;
-                                _addTransaction(widget.order);
-                              });
-                            },
-                            child: const Icon(
-                              Icons.add,
-                              size: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      widget.order.fav = !widget.order.fav;
-                    });
-                  },
-                  icon: Icon(
-                    widget.order.fav ? Icons.star : Icons.star_outline,
-                    color: Colors.orangeAccent,
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  //add order function
-  void _addTransaction(Order order) {
-    transaction.add(order);
-    widget.tambahTransaksi(order);
-    // countTransaction(distinct);
   }
 }

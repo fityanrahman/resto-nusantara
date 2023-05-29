@@ -21,8 +21,12 @@ class CircleKotaWidget extends StatelessWidget {
               width: 50,
               height: 50,
               fit: BoxFit.cover,
-              errorBuilder: (ctx, error, _) =>
-              const Center(child: Icon(Icons.error)),
+              errorBuilder: (ctx, error, _) => Container(
+                width: 50,
+                height: 50,
+                color: Colors.grey,
+                child: Icon(Icons.error),
+              ),
             ),
           ),
           const SizedBox(
