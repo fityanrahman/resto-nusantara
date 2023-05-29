@@ -1,5 +1,5 @@
 class Order {
-  int id;
+  String id;
   String name;
   int qty;
   bool fav;

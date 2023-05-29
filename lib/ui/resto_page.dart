@@ -10,13 +10,22 @@ class RestaurantPage extends StatefulWidget {
 
   final Restaurants restaurants;
 
-  RestaurantPage({required this.restaurants, Key? key}) : super(key: key);
+  const RestaurantPage({required this.restaurants, Key? key}) : super(key: key);
 
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
+  List<Order> transaksi = [];
+  var idSet = <String>{};
+  var distinct = <Order>[];
+
+  // Map<String, int> _finalSummary = {};
+  List<int> subTotal = [];
+  List<int> hitungItem = [];
+  int _itemHitung = 0;
+  int _itemHarga = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +81,16 @@ class _RestaurantPageState extends State<RestaurantPage> {
                 const Text(
                   'Makanan',
                 ),
-                _itemRestoWidget(textTheme, widget.restaurants.menus!.foods),
+                _itemRestoWidget(
+                    textTheme, widget.restaurants.menus!.foods, 'food'),
                 const SizedBox(
                   height: 28,
                 ),
                 const Text(
                   'Minuman',
                 ),
-                _itemRestoWidget(textTheme, widget.restaurants.menus!.drinks),
+                _itemRestoWidget(
+                    textTheme, widget.restaurants.menus!.drinks, 'drink'),
               ],
             ),
           ),
@@ -89,42 +100,116 @@ class _RestaurantPageState extends State<RestaurantPage> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
         child: SizedBox(
-            height: 72,
-            child: AddToCartButton(
-              onPress: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const CartPage()));
-              },
-            )),
+          height: 72,
+          child: AddToCartButton(
+            onPress: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const CartPage()));
+            },
+            itemCount: _itemHitung,
+            amount: _itemHarga,
+            restoName: widget.restaurants.name!,
+          ),
+        ),
       ),
     );
   }
 
-  Widget _itemRestoWidget(TextTheme textTheme, List<Foods>? food) {
+  Widget _itemRestoWidget(TextTheme textTheme, List<Foods>? food, String type) {
     List<Order> order = [];
 
     for (int i = 0; i < food!.length; i++) {
-      order.add(Order(id: i+1, name: food[i].name!, qty: 0, fav: false, price: 12000));
+      order.add(Order(
+          id: '$type${i + 1}',
+          name: food[i].name!,
+          qty: 0,
+          fav: false,
+          price: 12000));
     }
 
     return ListView.builder(
       shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: order.length,
       itemBuilder: (context, index) {
-        return ItemRestoWidget(textTheme: textTheme, order: order[index]);
+        return ItemRestoWidget(
+          textTheme: textTheme,
+          order: order[index],
+          tambahTransaksi: _tambahTransaksi,
+        );
       },
     );
+  }
+
+  //callback for add order function
+  void _tambahTransaksi(Order order) {
+    hitungItem = [];
+    _itemHitung = 0;
+
+    subTotal = [];
+    _itemHarga = 0;
+
+    transaksi.add(order);
+
+    print('jumlah transaksi = ${transaksi.length}');
+
+    for (var d in transaksi) {
+      if (idSet.add(d.id)) {
+        distinct.add(d);
+      }
+    }
+
+    transaksi.clear();
+
+    print('jumlah transaksi 2 = ${transaksi.length}');
+    print('menu unik = ${distinct.length}');
+
+    for (var d in distinct) {
+      hitungItem.add(d.qty);
+    }
+
+    for (int e in hitungItem) {
+      _itemHitung += e;
+    }
+
+    print('jumlah pesanan: $_itemHitung');
+
+    for (var j in distinct) {
+      subTotal.add(j.qty * j.price);
+    }
+
+    for (int j in subTotal) {
+      _itemHarga += j;
+    }
+
+    print('total pesanan: $_itemHarga');
+
+    //   Map<String, int> summary = {
+    //     'itemCount': jmlItem,
+    //     'amount': grandTotal,
+    //   };
+    //
+    // var mapKeys = summary.keys; //get all keys
+    // var mapValues = summary.values; //get all values
+    // print(mapKeys);
+    // print(mapValues);
+
+    // setState(() {
+    //   _itemHitung = jmlItem;
+    //   _itemHarga = grandTotal;
+    // });
   }
 }
 
 class ItemRestoWidget extends StatefulWidget {
   final TextTheme textTheme;
-  Order order;
+  final Order order;
+  final Function tambahTransaksi;
 
-  ItemRestoWidget({
+  const ItemRestoWidget({
     required this.textTheme,
     required this.order,
+    required this.tambahTransaksi,
     Key? key,
   }) : super(key: key);
 
@@ -133,9 +218,6 @@ class ItemRestoWidget extends StatefulWidget {
 }
 
 class _ItemRestoWidgetState extends State<ItemRestoWidget> {
-  // int itemQty = 0;
-  // bool itemFav = false;
-
   List<Order> transaction = [];
   List<int> itemCounts = [];
 
@@ -144,201 +226,120 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
 
   @override
   Widget build(BuildContext context) {
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: const BoxDecoration(
-            border: Border.symmetric(
-              horizontal: BorderSide(
-                color: Color(0xffd9d9d9),
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: const BoxDecoration(
+        border: Border.symmetric(
+          horizontal: BorderSide(
+            color: Color(0xffd9d9d9),
+          ),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            leading: ClipRRect(
+              borderRadius: const BorderRadius.all(
+                Radius.circular(8),
+              ),
+              child: Image.network(
+                'https://restaurant-api.dicoding.dev/images/medium/14',
+                fit: BoxFit.cover,
+                errorBuilder: (ctx, error, _) =>
+                    const Center(child: Icon(Icons.error)),
               ),
             ),
+            title: Text(widget.order.name),
+            subtitle: Text('Rp ${widget.order.price.toString()}'),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                leading: ClipRRect(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(8),
-                  ),
-                  child: Image.network(
-                    'https://restaurant-api.dicoding.dev/images/medium/14',
-                    fit: BoxFit.cover,
-                    errorBuilder: (ctx, error, _) =>
-                        const Center(child: Icon(Icons.error)),
-                  ),
-                ),
-                title: Text(widget.order.name),
-                subtitle: Text('Rp ${widget.order.price.toString()}'),
-              ),
-              Padding(
-                padding: EdgeInsets.only(
-                    left: widget.order.qty == 0 ? 16 : 0, right: 16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    widget.order.qty == 0
-                        ? ElevatedButton(
+          Padding(
+            padding: EdgeInsets.only(
+                left: widget.order.qty == 0 ? 16 : 0, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                widget.order.qty == 0
+                    ? ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            widget.order.qty++;
+                            _addTransaction(widget.order);
+                          });
+                        },
+                        child: Text(
+                          'Tambah',
+                          style: widget.textTheme.labelSmall,
+                        ),
+                      )
+                    : Row(
+                        children: [
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder(),
+                              minimumSize: Size.zero,
+                              fixedSize: const Size(24, 24),
+                              padding: EdgeInsets.zero,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                widget.order.qty--;
+                                _addTransaction(widget.order);
+                              });
+                            },
+                            child: const Icon(
+                              Icons.remove,
+                              size: 16,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: Text(widget.order.qty.toString()),
+                          ),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: const CircleBorder(),
+                              minimumSize: Size.zero,
+                              fixedSize: const Size(24, 24),
+                              padding: EdgeInsets.zero,
+                            ),
                             onPressed: () {
                               setState(() {
                                 widget.order.qty++;
-                                // itemQty = widget.order.qty;
-                                // itemQty++;
                                 _addTransaction(widget.order);
-                                // print('menu widget : ${widget.order.qty}');
-                                // print('menu state : $itemQty');
                               });
                             },
-                            child: Text(
-                              'Tambah',
-                              style: widget.textTheme.labelSmall,
+                            child: const Icon(
+                              Icons.add,
+                              size: 16,
                             ),
-                          )
-                        : Row(
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  minimumSize: Size.zero,
-                                  fixedSize: const Size(24, 24),
-                                  padding: EdgeInsets.zero,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.order.qty--;
-                                    // itemQty = widget.order.qty;
-                                    // itemQty--;
-                                    _addTransaction(widget.order);
-                                    // print('menu widget : ${widget.order.qty}');
-                                    // print('menu state : $itemQty');
-                                  });
-                                },
-                                child: const Icon(
-                                  Icons.remove,
-                                  size: 16,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 12),
-                                child: Text(widget.order.qty.toString()),
-                                // child: Text(itemQty.toString()),
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const CircleBorder(),
-                                  minimumSize: Size.zero,
-                                  fixedSize: const Size(24, 24),
-                                  padding: EdgeInsets.zero,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.order.qty++;
-                                    // itemQty = widget.order.qty;
-                                    // itemQty++;
-                                    _addTransaction(widget.order);
-                                    // print('menu widget : ${widget.order.qty}');
-                                    // print('menu state : $itemQty');
-                                  });
-                                },
-                                child: const Icon(
-                                  Icons.add,
-                                  size: 16,
-                                ),
-                              ),
-                            ],
                           ),
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          widget.order.fav = !widget.order.fav;
-                          // itemFav = widget.order.fav;
-                          print('fav widget : ${widget.order.fav}');
-                          // print('fav state : $itemFav');
-                        });
-                      },
-                      icon: Icon(
-                        widget.order.fav ? Icons.star : Icons.star_outline,
-                        color: Colors.orangeAccent,
+                        ],
                       ),
-                    )
-                  ],
-                ),
-              ),
-            ],
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.order.fav = !widget.order.fav;
+                    });
+                  },
+                  icon: Icon(
+                    widget.order.fav ? Icons.star : Icons.star_outline,
+                    color: Colors.orangeAccent,
+                  ),
+                )
+              ],
+            ),
           ),
-        );
+        ],
+      ),
+    );
   }
 
-  //add transaction was here
+  //add order function
   void _addTransaction(Order order) {
-    // List<Order> transaction = [];
-    // List<int> itemCount = [];
-
     transaction.add(order);
-
-    // var idSet = <int>{};
-    // var distinct = <Order>[];
-    for (var d in transaction) {
-      if (idSet.add(d.id)) {
-        distinct.add(d);
-      }
-    }
-
-    print('last id = ${distinct.last.id}');
-    print('distinct =  ${distinct.length}');
-
-    // if (order.qty < 1) {
-    //   transaction.remove(order);
-    //   print('remove $order');
-    // }
-
-
-    // for (int i = 0; i < transaction.length; i++) {
-    //   itemCount.add(transaction[i].qty);
-    // }
-
-    for (var a in distinct) {
-      itemCounts.add(a.qty);
-    }
-
-    print('transactions = ${distinct.toList().toString()}');
-
-    // itemCount.add(order.qty);
-    //
-    print('itemCount = $itemCounts');
-
-    print('tambah name order ${order.name}');
-    print('tambah qty order ${order.qty}');
-    print('tambah order ${transaction.length}');
-    countTransaction(distinct);
+    widget.tambahTransaksi(order);
+    // countTransaction(distinct);
   }
-}
-
-Map<String, dynamic> countTransaction(List<Order> transaction) {
-  int count;
-  int sum = 0;
-  var listSum = [];
-  Map<String, int> summary;
-
-  count = transaction.length;
-
-  for (int i = 0; i < transaction.length; i++) {
-    listSum.add(transaction[i].qty * transaction[i].price);
-  }
-
-  // int sums => listSum.fold(0, (e, t) => e + t);
-
-  for (int e in listSum) {
-    sum += e;
-  }
-
-  summary = {
-    'count': count,
-    'sum': sum,
-  };
-
-  print('hitung transaksi $summary');
-
-  return summary;
 }
