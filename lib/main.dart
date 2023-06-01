@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:submission_resto/common/style.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
+import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/ui/home_page.dart';
 import 'package:submission_resto/ui/resto_page.dart';
@@ -34,7 +35,9 @@ class MyApp extends StatelessWidget {
               restaurants:
                   ModalRoute.of(context)?.settings.arguments as Restaurants,
             ),
-        CartPage.routeName: (context) => const CartPage(),
+        CartPage.routeName: (context) => CartPage(
+              orders: ModalRoute.of(context)?.settings.arguments as List<Order>,
+            ),
       },
     );
   }

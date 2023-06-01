@@ -25,7 +25,7 @@ class CircleKotaWidget extends StatelessWidget {
                 width: 50,
                 height: 50,
                 color: Colors.grey,
-                child: Icon(Icons.error),
+                child: const Icon(Icons.error),
               ),
             ),
           ),

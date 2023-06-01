@@ -3,15 +3,8 @@ import 'package:flutter/material.dart';
 class AddToCartButton extends StatefulWidget {
   final void Function() onPress;
 
-  final int itemCount;
-  final String restoName;
-  final int amount;
-
   const AddToCartButton({
     required this.onPress,
-    required this.itemCount,
-    required this.restoName,
-    required this.amount,
     super.key,
   });
 

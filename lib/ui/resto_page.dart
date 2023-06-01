@@ -22,11 +22,6 @@ class _RestaurantPageState extends State<RestaurantPage> {
   var idSet = <String>{};
   var distinct = <Order>[];
 
-  List<int> subTotal = [];
-  List<int> hitungItem = [];
-  int _itemHitung = 0;
-  int _itemHarga = 0;
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -87,12 +82,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
         height: 60,
         child: AddToCartButton(
           onPress: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const CartPage()));
-          },
-          itemCount: _itemHitung,
-          amount: _itemHarga,
-          restoName: widget.restaurants.name!,
+            Navigator.pushNamed(context, CartPage.routeName,
+                arguments: distinct);
+          }
         ),
       ),
     );
@@ -121,6 +113,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   Widget _itemRestoWidget(TextTheme textTheme, List<Foods>? food, String type) {
     List<Order> order = [];
 
+    //buat list of Order
     for (int i = 0; i < food!.length; i++) {
       order.add(
         Order(
@@ -159,36 +152,25 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
   //callback for add order function
   void _tambahTransaksi(Order order) {
-    hitungItem = [];
-    _itemHitung = 0;
-
-    subTotal = [];
-    _itemHarga = 0;
-
+    //tambahkan item ke list transaksi
     transaksi.add(order);
 
+    //buat set of string idSet. kemudian tambah item ke dalam list distinct berdasarkan idSet
     for (var d in transaksi) {
       if (idSet.add(d.id)) {
         distinct.add(d);
       }
     }
 
+    //hapus item dengan qty < 1 dari list distinct
+    for (int i = 0; i < distinct.length; i++) {
+      if (distinct[i].qty < 1) {
+        idSet.remove(distinct[i].id);
+        distinct.remove(distinct[i]);
+      }
+    }
+
+    //hapus list transaksi
     transaksi.clear();
-
-    for (var d in distinct) {
-      hitungItem.add(d.qty);
-    }
-
-    for (int e in hitungItem) {
-      _itemHitung += e;
-    }
-
-    for (var j in distinct) {
-      subTotal.add(j.qty * j.price);
-    }
-
-    for (int j in subTotal) {
-      _itemHarga += j;
-    }
   }
 }
