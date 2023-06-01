@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/ui/home_page.dart';
-import 'package:submission_resto/widget/item_resto_widget.dart';
+import 'package:submission_resto/widget/item_cart_widget.dart';
 
 class CartPage extends StatefulWidget {
   static const routeName = '/cart-page';
 
-  List<Order> orders;
+  final List<Order> orders;
 
-  CartPage({required this.orders, Key? key}) : super(key: key);
+  const CartPage({required this.orders, Key? key}) : super(key: key);
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -26,11 +26,6 @@ class _CartPageState extends State<CartPage> {
   var idSet = <String>{};
   var distinct = <Order>[];
 
-  List<int> subTotal = [];
-  List<int> hitungItem = [];
-  int _itemHitung = 0;
-  int _itemHarga = 0;
-
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -45,7 +40,7 @@ class _CartPageState extends State<CartPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              _itemRestoWidget(textTheme, widget.orders),
+              _itemCartWidget(textTheme, widget.orders),
               _opsiPengiriman(textTheme),
               _ringkasanBayar(textTheme),
             ],
@@ -72,7 +67,7 @@ class _CartPageState extends State<CartPage> {
 
   Widget _ringkasanBayar(TextTheme textTheme) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 80),
+      padding: const EdgeInsets.only(top: 28.0, bottom: 80),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -126,81 +121,84 @@ class _CartPageState extends State<CartPage> {
   }
 
   Widget _opsiPengiriman(TextTheme textTheme) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('Opsi Pengiriman'),
-        const SizedBox(
-          height: 12,
-        ),
-        ListTile(
-          visualDensity: const VisualDensity(vertical: -4),
-          contentPadding: EdgeInsets.zero,
-          minLeadingWidth: 0,
-          leading: SizedBox(
-            height: 16,
-            width: 16,
-            child: Transform.scale(
-              scale: 0.8,
-              child: Radio(
-                value: true,
-                groupValue: regular,
-                onChanged: (bool? value) {
-                  setState(() {
-                    regular = value;
-                  });
-                },
+    return Padding(
+      padding: const EdgeInsets.only(top: 28.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Opsi Pengiriman'),
+          const SizedBox(
+            height: 12,
+          ),
+          ListTile(
+            visualDensity: const VisualDensity(vertical: -4),
+            contentPadding: EdgeInsets.zero,
+            minLeadingWidth: 0,
+            leading: SizedBox(
+              height: 16,
+              width: 16,
+              child: Transform.scale(
+                scale: 0.8,
+                child: Radio(
+                  value: true,
+                  groupValue: regular,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      regular = value;
+                    });
+                  },
+                ),
               ),
             ),
-          ),
-          title: const Text('Reguler'),
-          trailing: Text(
-            'Rp 12.000',
-            style: textTheme.bodyLarge,
-          ),
-        ),
-        ListTile(
-          visualDensity: const VisualDensity(vertical: -4),
-          contentPadding: EdgeInsets.zero,
-          minLeadingWidth: 0,
-          leading: SizedBox(
-            height: 16,
-            width: 16,
-            child: Transform.scale(
-              scale: 0.8,
-              child: Radio(
-                value: false,
-                groupValue: regular,
-                onChanged: (bool? value) {
-                  setState(() {
-                    regular = value;
-                  });
-                },
-              ),
+            title: const Text('Reguler'),
+            trailing: Text(
+              'Rp 12.000',
+              style: textTheme.bodyLarge,
             ),
           ),
-          title: const Text('Hemat'),
-          trailing: Text(
-            'Rp 5.000',
-            style: textTheme.bodyLarge,
+          ListTile(
+            visualDensity: const VisualDensity(vertical: -4),
+            contentPadding: EdgeInsets.zero,
+            minLeadingWidth: 0,
+            leading: SizedBox(
+              height: 16,
+              width: 16,
+              child: Transform.scale(
+                scale: 0.8,
+                child: Radio(
+                  value: false,
+                  groupValue: regular,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      regular = value;
+                    });
+                  },
+                ),
+              ),
+            ),
+            title: const Text('Hemat'),
+            trailing: Text(
+              'Rp 5.000',
+              style: textTheme.bodyLarge,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  Widget _itemRestoWidget(TextTheme textTheme, List<Order> order) {
+  Widget _itemCartWidget(TextTheme textTheme, List<Order> order) {
     return Column(
       children: [
         ListView.builder(
+          padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: order.length,
           itemBuilder: (context, index) {
-            return ItemRestoWidget(
+            return ItemCartWidget(
               textTheme: textTheme,
               order: order[index],
-              tambahTransaksi: _tambahTransaksi,
             );
           },
         ),
@@ -210,53 +208,18 @@ class _CartPageState extends State<CartPage> {
 
   Widget _dialogOrder() {
     return AlertDialog(
-      icon: Icon(Icons.check_circle),
-      title: Center(child: Text('Order Berhasil')),
-      content: Text(
+      icon: const Icon(Icons.check_circle),
+      title: const Center(child: Text('Order Berhasil')),
+      content: const Text(
           'Pesanan akan segera diproses oleh restoran, dan akan segera dikirim ke alamat anda oleh driver. '),
       actions: [
         TextButton(
             onPressed: () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => HomePage()));
+                  context, MaterialPageRoute(builder: (context) => const HomePage()));
             },
-            child: Text('OK')),
+            child: const Text('OK')),
       ],
     );
-  }
-
-  //callback for add order function
-  void _tambahTransaksi(Order order) {
-    hitungItem = [];
-    _itemHitung = 0;
-
-    subTotal = [];
-    _itemHarga = 0;
-
-    transaksi.add(order);
-
-    for (var d in transaksi) {
-      if (idSet.add(d.id)) {
-        distinct.add(d);
-      }
-    }
-
-    transaksi.clear();
-
-    for (var d in distinct) {
-      hitungItem.add(d.qty);
-    }
-
-    for (int e in hitungItem) {
-      _itemHitung += e;
-    }
-
-    for (var j in distinct) {
-      subTotal.add(j.qty * j.price);
-    }
-
-    for (int j in subTotal) {
-      _itemHarga += j;
-    }
   }
 }

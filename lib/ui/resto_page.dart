@@ -84,7 +84,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
           onPress: () {
             Navigator.pushNamed(context, CartPage.routeName,
                 arguments: distinct);
-          }
+          },
         ),
       ),
     );
@@ -126,7 +126,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     }
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 28.0),
+      padding: const EdgeInsets.only(bottom: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
