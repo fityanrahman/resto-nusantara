@@ -15,20 +15,17 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  var menu = 0;
-  var fav = false;
-
-  // String? pengiriman;
-  bool? regular = true;
-
-  //tambahTransaksi
-  List<Order> transaksi = [];
-  var idSet = <String>{};
-  var distinct = <Order>[];
+  bool regular = true;
+  int harga = 0;
+  int ongkir = 12000;
+  int biayaLayanan = 4000;
+  int totalPesanan = 0;
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+
+    hitungPesanan();
 
     return Scaffold(
       extendBody: true,
@@ -47,20 +44,24 @@ class _CartPageState extends State<CartPage> {
           ),
         ),
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.all(12),
-          ),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (BuildContext context) => _dialogOrder());
-          },
-          icon: const Icon(Icons.monetization_on),
-          label: const Text('Bayar Pesanan'),
+      bottomNavigationBar: _bayarPesanan(context),
+    );
+  }
+
+  Widget _bayarPesanan(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: ElevatedButton.icon(
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.all(12),
         ),
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => _dialogOrder());
+        },
+        icon: const Icon(Icons.monetization_on),
+        label: const Text('Bayar Pesanan'),
       ),
     );
   }
@@ -71,7 +72,7 @@ class _CartPageState extends State<CartPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('RIngkasan Pembayaran'),
+          const Text('Ringkasan Pembayaran'),
           const SizedBox(
             height: 12,
           ),
@@ -81,7 +82,7 @@ class _CartPageState extends State<CartPage> {
             minLeadingWidth: 0,
             title: const Text('Harga'),
             trailing: Text(
-              'Rp 30.000',
+              'Rp $harga',
               style: textTheme.bodyLarge,
             ),
           ),
@@ -91,7 +92,7 @@ class _CartPageState extends State<CartPage> {
             minLeadingWidth: 0,
             title: const Text('Ongkir'),
             trailing: Text(
-              'Rp 12.000',
+              'Rp $ongkir',
               style: textTheme.bodyLarge,
             ),
           ),
@@ -101,7 +102,7 @@ class _CartPageState extends State<CartPage> {
             minLeadingWidth: 0,
             title: const Text('Biaya Layanan'),
             trailing: Text(
-              'Rp 4.000',
+              'Rp $biayaLayanan',
               style: textTheme.bodyLarge,
             ),
           ),
@@ -111,7 +112,7 @@ class _CartPageState extends State<CartPage> {
             minLeadingWidth: 0,
             title: const Text('Total'),
             trailing: Text(
-              'Rp 46.000',
+              'Rp $totalPesanan',
               style: textTheme.bodyLarge,
             ),
           ),
@@ -144,7 +145,8 @@ class _CartPageState extends State<CartPage> {
                   groupValue: regular,
                   onChanged: (bool? value) {
                     setState(() {
-                      regular = value;
+                      regular = value!;
+                      ongkir = 12000;
                     });
                   },
                 ),
@@ -170,7 +172,8 @@ class _CartPageState extends State<CartPage> {
                   groupValue: regular,
                   onChanged: (bool? value) {
                     setState(() {
-                      regular = value;
+                      regular = value!;
+                      ongkir = 5000;
                     });
                   },
                 ),
@@ -215,11 +218,17 @@ class _CartPageState extends State<CartPage> {
       actions: [
         TextButton(
             onPressed: () {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => const HomePage()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const HomePage()));
             },
             child: const Text('OK')),
       ],
     );
+  }
+
+  void hitungPesanan() {
+    harga = widget.orders.fold(0, (sum, item) => sum + item.price);
+
+    totalPesanan = harga + ongkir + biayaLayanan;
   }
 }
