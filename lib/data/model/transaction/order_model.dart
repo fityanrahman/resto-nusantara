@@ -4,6 +4,7 @@ class Order {
   int qty;
   bool fav;
   int price;
+  bool food;
 
   Order({
     required this.id,
@@ -11,5 +12,6 @@ class Order {
     required this.qty,
     required this.fav,
     required this.price,
+    required this.food,
   });
 }

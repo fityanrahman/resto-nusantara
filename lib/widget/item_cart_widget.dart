@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/common/funs/get_color_scheme.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 
 class ItemCartWidget extends StatefulWidget {
@@ -20,6 +21,8 @@ class _ItemRestoWidgetState extends State<ItemCartWidget> {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = getCurrentColorScheme(context);
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 12),
@@ -34,27 +37,25 @@ class _ItemRestoWidgetState extends State<ItemCartWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _itemMenu(),
+          _itemMenu(colorScheme),
         ],
       ),
     );
   }
 
-  Widget _itemMenu() {
+  Widget _itemMenu(ColorScheme colorScheme) {
     return ListTile(
       leading: ClipRRect(
         borderRadius: const BorderRadius.all(
           Radius.circular(8),
         ),
-        child: Image.network(
-          'https://restaurant-api.dicoding.dev/images/medium/14',
-          fit: BoxFit.cover,
-          errorBuilder: (ctx, error, _) => AspectRatio(
-            aspectRatio: 1,
-            child: Container(
-              color: Colors.grey,
-              child: const Icon(Icons.error),
-            ),
+        child: AspectRatio(
+          aspectRatio: 1.6,
+          child: Container(
+            color: colorScheme.secondary,
+            child: widget.order.food
+                ? Icon(Icons.fastfood_rounded, color: colorScheme.onSecondary,)
+                : Icon(Icons.emoji_food_beverage_rounded, color: colorScheme.onSecondary),
           ),
         ),
       ),

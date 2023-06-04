@@ -66,9 +66,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
               children: [
                 _detailResto(),
                 _itemRestoWidget(
-                    textTheme, widget.restaurants.menus!.foods, 'Makanan'),
+                    textTheme, widget.restaurants.menus!.foods, 'Makanan', true),
                 _itemRestoWidget(
-                    textTheme, widget.restaurants.menus!.drinks, 'Minuman'),
+                    textTheme, widget.restaurants.menus!.drinks, 'Minuman', false),
               ],
             ),
           ),
@@ -117,18 +117,21 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 
-  Widget _itemRestoWidget(TextTheme textTheme, List<Foods>? food, String type) {
+  Widget _itemRestoWidget(
+      TextTheme textTheme, List<Foods>? food, String type, bool isFood) {
     List<Order> order = [];
 
     //buat list of Order
     for (int i = 0; i < food!.length; i++) {
       order.add(
         Order(
-            id: '$type${i + 1}',
-            name: food[i].name!,
-            qty: 0,
-            fav: false,
-            price: 12000),
+          id: '$type${i + 1}',
+          name: food[i].name!,
+          qty: 0,
+          fav: false,
+          price: 12000,
+          food: isFood,
+        ),
       );
     }
 
