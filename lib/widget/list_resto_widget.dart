@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/common/funs/get_color_scheme.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
 
 class ListRestoWidget extends StatelessWidget {
@@ -11,10 +12,11 @@ class ListRestoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = getCurrentColorScheme(context);
+
     return Container(
       width: double.infinity,
       height: 100,
-      padding: const EdgeInsets.all(16),
       alignment: Alignment.bottomLeft,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
@@ -28,18 +30,42 @@ class ListRestoWidget extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          Text(restaurants.name!),
-          Text(restaurants.city!),
-          Row(
-            children: [
-              const Icon(Icons.star),
-              Text(restaurants.rating.toString()),
-            ],
-          )
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    colorScheme.secondaryContainer,
+                    Colors.transparent,
+                    Colors.transparent,
+                    colorScheme.secondaryContainer,
+                  ],
+                  begin: Alignment.centerRight,
+                  end: Alignment.centerLeft,
+                  stops: const [0, 0, 0.1, 1],
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(restaurants.name!),
+                Text(restaurants.city!),
+                Row(
+                  children: [
+                    const Icon(Icons.star),
+                    Text(restaurants.rating.toString()),
+                  ],
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
