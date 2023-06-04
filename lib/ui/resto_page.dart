@@ -43,13 +43,16 @@ class _RestaurantPageState extends State<RestaurantPage> {
                   shadowWidth: 800,
                   shadowHeight: 200,
                   shadowColor: colorScheme.surface,
-                  child: Image.network(
-                    widget.restaurants.pictureId!,
-                    width: double.infinity,
-                    height: double.infinity,
-                    fit: BoxFit.cover,
-                    errorBuilder: (ctx, error, _) =>
-                        const Center(child: Icon(Icons.error)),
+                  child: Hero(
+                    tag: widget.restaurants.pictureId!,
+                    child: Image.network(
+                      widget.restaurants.pictureId!,
+                      width: double.infinity,
+                      height: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, error, _) =>
+                          const Center(child: Icon(Icons.error),),
+                    ),
                   ),
                 ),
                 centerTitle: true,

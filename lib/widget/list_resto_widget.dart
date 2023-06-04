@@ -24,13 +24,18 @@ class ListRestoWidget extends StatelessWidget {
         borderRadius: const BorderRadius.all(
           Radius.circular(16),
         ),
-        image: DecorationImage(
-          image: NetworkImage(restaurants.pictureId!),
-          fit: BoxFit.cover,
-        ),
       ),
       child: Stack(
         children: [
+          Image.network(
+            restaurants.pictureId!,
+            width: double.infinity,
+            height: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (ctx, error, _) => const Center(
+              child: Icon(Icons.error),
+            ),
+          ),
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
