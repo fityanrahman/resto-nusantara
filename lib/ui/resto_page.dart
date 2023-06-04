@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shadow_overlay/shadow_overlay.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
 import 'package:submission_resto/data/model/foods_model.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
@@ -36,15 +37,21 @@ class _RestaurantPageState extends State<RestaurantPage> {
               pinned: true,
               expandedHeight: 280,
               flexibleSpace: FlexibleSpaceBar(
-                background: Image.network(
-                  widget.restaurants.pictureId!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (ctx, error, _) =>
-                      const Center(child: Icon(Icons.error)),
+                background: ShadowOverlay(
+                  shadowWidth: 800,
+                  shadowHeight: 200,
+                  shadowColor: colorScheme.surface,
+                  child: Image.network(
+                    widget.restaurants.pictureId!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (ctx, error, _) =>
+                        const Center(child: Icon(Icons.error)),
+                  ),
                 ),
                 centerTitle: true,
                 title: Text(
                   widget.restaurants.name!,
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: colorScheme.onSurface),
                 ),
               ),
