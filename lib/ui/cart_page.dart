@@ -141,6 +141,7 @@ class _CartPageState extends State<CartPage> {
             onTap: () {
               setState(() {
                 regular = true;
+                ongkir = 12000;
               });
             },
             splashColor: Colors.transparent,
@@ -177,6 +178,7 @@ class _CartPageState extends State<CartPage> {
             onTap: () {
               setState(() {
                 regular = false;
+                ongkir = 5000;
               });
             },
             splashColor: Colors.transparent,
@@ -251,8 +253,8 @@ class _CartPageState extends State<CartPage> {
   }
 
   void hitungPesanan() {
-    harga = widget.orders.fold(0, (sum, item) => sum + item.price);
-
+    harga = widget.orders.fold(0, (sum, item) => sum + item.price * item.qty);
+    
     totalPesanan = harga + ongkir + biayaLayanan;
   }
 }
