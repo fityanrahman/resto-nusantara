@@ -79,6 +79,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                _ratingLocResto(textTheme),
                 _detailResto(textTheme),
                 _itemRestoWidget(
                   textTheme,
@@ -138,6 +139,42 @@ class _RestaurantPageState extends State<RestaurantPage> {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.justify,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _ratingLocResto(TextTheme textTheme) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
+                children: [
+                  const Icon(
+                    Icons.star,
+                    size: 16,
+                  ),
+                  SizedBox(width: 4),
+                  Text(widget.restaurants.rating.toString()),
+                ],
+              ),
+              SizedBox(width: 16),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_on,
+                    size: 16,
+                  ),
+                  SizedBox(width: 4),
+                  Text(widget.restaurants.city.toString()),
+                ],
+              ),
+            ],
           ),
         ],
       ),
