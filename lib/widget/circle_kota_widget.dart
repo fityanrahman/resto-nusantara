@@ -23,7 +23,10 @@ class CircleKotaWidget extends StatelessWidget {
               width: 50,
               height: 50,
               color: colorScheme.secondaryContainer,
-              child: Icon(Icons.location_on_rounded, color: colorScheme.onSecondaryContainer,),
+              child: Icon(
+                Icons.location_on_rounded,
+                color: colorScheme.onSecondaryContainer,
+              ),
             ),
           ),
           const SizedBox(

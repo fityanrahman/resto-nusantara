@@ -80,10 +80,18 @@ class _RestaurantPageState extends State<RestaurantPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _detailResto(textTheme),
-                _itemRestoWidget(textTheme, widget.restaurants.menus!.foods,
-                    'Makanan', true),
-                _itemRestoWidget(textTheme, widget.restaurants.menus!.drinks,
-                    'Minuman', false),
+                _itemRestoWidget(
+                  textTheme,
+                  widget.restaurants.menus!.foods,
+                  'Makanan',
+                  true,
+                ),
+                _itemRestoWidget(
+                  textTheme,
+                  widget.restaurants.menus!.drinks,
+                  'Minuman',
+                  false,
+                ),
               ],
             ),
           ),
@@ -101,8 +109,11 @@ class _RestaurantPageState extends State<RestaurantPage> {
         height: 60,
         child: AddToCartButton(
           onPress: () {
-            Navigator.pushNamed(context, CartPage.routeName,
-                arguments: distinct);
+            Navigator.pushNamed(
+              context,
+              CartPage.routeName,
+              arguments: distinct,
+            );
           },
         ),
       ),

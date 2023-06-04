@@ -59,8 +59,9 @@ class FavRestoWidget extends StatelessWidget {
                   Text(
                     restaurants.name!,
                     style: textTheme.bodyLarge?.copyWith(
-                        color: colorScheme.onSecondaryContainer,
-                        fontWeight: FontWeight.w700),
+                      color: colorScheme.onSecondaryContainer,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                   SizedBox(height: 4),
                   Text(restaurants.city!),

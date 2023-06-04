@@ -25,8 +25,7 @@ class ListRestoWidget extends StatelessWidget {
           Radius.circular(16),
         ),
         image: DecorationImage(
-          image: NetworkImage(
-              restaurants.pictureId!),
+          image: NetworkImage(restaurants.pictureId!),
           fit: BoxFit.cover,
         ),
       ),
@@ -58,8 +57,9 @@ class ListRestoWidget extends StatelessWidget {
                 Text(
                   restaurants.name!,
                   style: textTheme.bodyLarge?.copyWith(
-                      color: colorScheme.onSecondaryContainer,
-                      fontWeight: FontWeight.w700),
+                    color: colorScheme.onSecondaryContainer,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 SizedBox(height: 4),
                 Text(restaurants.city!),

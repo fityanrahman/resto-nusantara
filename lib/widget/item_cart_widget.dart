@@ -58,8 +58,10 @@ class _ItemRestoWidgetState extends State<ItemCartWidget> {
                     Icons.fastfood_rounded,
                     color: colorScheme.onSecondary,
                   )
-                : Icon(Icons.emoji_food_beverage_rounded,
-                    color: colorScheme.onSecondary),
+                : Icon(
+                    Icons.emoji_food_beverage_rounded,
+                    color: colorScheme.onSecondary,
+                  ),
           ),
         ),
       ),

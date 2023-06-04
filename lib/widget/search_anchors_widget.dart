@@ -51,8 +51,9 @@ class _SearchAnchorsState extends State<SearchAnchors> {
                 width: 50,
                 height: 50,
                 fit: BoxFit.cover,
-                errorBuilder: (ctx, error, _) =>
-                    const Center(child: Icon(Icons.error)),
+                errorBuilder: (ctx, error, _) => const Center(
+                  child: Icon(Icons.error),
+                ),
               ),
             ),
             title: Text(filteredColor.name!),
@@ -73,7 +74,6 @@ class _SearchAnchorsState extends State<SearchAnchors> {
   }
 
   void handleSelection(Restaurants color) {
-
     setState(() {
       selectedColor = color.name;
       if (searchHistory.length >= 5) {
