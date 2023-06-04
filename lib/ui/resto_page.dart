@@ -35,7 +35,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
           return [
             SliverAppBar(
               pinned: true,
-              expandedHeight: 280,
+              expandedHeight: 250,
               flexibleSpace: FlexibleSpaceBar(
                 background: ShadowOverlay(
                   shadowWidth: 800,
