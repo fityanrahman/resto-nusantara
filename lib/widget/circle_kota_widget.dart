@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/common/funs/get_color_scheme.dart';
 
 class CircleKotaWidget extends StatelessWidget {
   final String city;
@@ -10,23 +11,19 @@ class CircleKotaWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = getCurrentColorScheme(context);
+
     return SizedBox(
       width: 50,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipOval(
-            child: Image.network(
-              'https://restaurant-api.dicoding.dev/images/medium/14',
+            child: Container(
               width: 50,
               height: 50,
-              fit: BoxFit.cover,
-              errorBuilder: (ctx, error, _) => Container(
-                width: 50,
-                height: 50,
-                color: Colors.grey,
-                child: const Icon(Icons.error),
-              ),
+              color: colorScheme.secondaryContainer,
+              child: Icon(Icons.location_on_rounded, color: colorScheme.onSecondaryContainer,),
             ),
           ),
           const SizedBox(

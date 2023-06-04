@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/common/funs/get_color_scheme.dart';
 import 'package:submission_resto/data/model/foods_model.dart';
 import 'package:submission_resto/data/model/restaurants_model.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
@@ -8,7 +9,6 @@ import 'package:submission_resto/widget/item_resto_widget.dart';
 
 class RestaurantPage extends StatefulWidget {
   static const routeName = '/resto-page';
-
   final Restaurants restaurants;
 
   const RestaurantPage({required this.restaurants, Key? key}) : super(key: key);
@@ -25,6 +25,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    ColorScheme colorScheme = getCurrentColorScheme(context);
 
     return Scaffold(
       body: NestedScrollView(
@@ -42,7 +43,10 @@ class _RestaurantPageState extends State<RestaurantPage> {
                       const Center(child: Icon(Icons.error)),
                 ),
                 centerTitle: true,
-                title: Text(widget.restaurants.name!),
+                title: Text(
+                  widget.restaurants.name!,
+                  style: TextStyle(color: colorScheme.onSurface),
+                ),
               ),
               actions: [
                 IconButton(
@@ -94,11 +98,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 28.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Detail Restaurant',
+          const Padding(
+            padding: EdgeInsets.only(top: 28.0, bottom: 16.0),
+            child: Text(
+              'Detail Restaurant',
+            ),
           ),
-          const SizedBox(height: 16),
           Text(
             widget.restaurants.description!,
             maxLines: 3,

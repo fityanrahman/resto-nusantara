@@ -18,16 +18,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Restoran Nusantara',
       themeMode: themeMode,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.yellow,
-        useMaterial3: true,
-        brightness: Brightness.light,
-      ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: Colors.yellow,
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       initialRoute: HomePage.routeName,
       routes: {
         HomePage.routeName: (context) => const HomePage(),
