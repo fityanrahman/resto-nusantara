@@ -23,7 +23,7 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
 
   @override
   Widget build(BuildContext context) {
-    ColorScheme colorScheme  = getCurrentColorScheme(context);
+    ColorScheme colorScheme = getCurrentColorScheme(context);
 
     return Container(
       width: double.infinity,
@@ -136,13 +136,20 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
           child: Container(
             color: colorScheme.secondary,
             child: widget.order.food
-                ? Icon(Icons.fastfood_rounded, color: colorScheme.onSecondary,)
-                : Icon(Icons.emoji_food_beverage_rounded, color: colorScheme.onSecondary),
+                ? Icon(
+                    Icons.fastfood_rounded,
+                    color: colorScheme.onSecondary,
+                  )
+                : Icon(Icons.emoji_food_beverage_rounded,
+                    color: colorScheme.onSecondary),
           ),
         ),
         // ),
       ),
-      title: Text(widget.order.name),
+      title: Text(
+        widget.order.name,
+        style: TextStyle(fontWeight: FontWeight.w500),
+      ),
       subtitle: Text(
         'Rp ${widget.order.price.toString()}',
       ),

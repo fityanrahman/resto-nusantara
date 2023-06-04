@@ -10,7 +10,5 @@ ColorScheme getCurrentColorScheme(BuildContext context) {
 
   var colorScheme = themeData.colorScheme;
 
-  print('themeData : $themeData');
-
   return colorScheme;
 }

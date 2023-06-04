@@ -23,6 +23,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
   var idSet = <String>{};
   var distinct = <Order>[];
 
+  bool fav = false;
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
@@ -59,8 +61,12 @@ class _RestaurantPageState extends State<RestaurantPage> {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.star_outline),
+                  onPressed: () {
+                    setState(() {
+                      fav = !fav;
+                    });
+                  },
+                  icon: fav ? Icon(Icons.star) : Icon(Icons.star_outline),
                 ),
               ],
             ),
@@ -73,11 +79,11 @@ class _RestaurantPageState extends State<RestaurantPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _detailResto(),
-                _itemRestoWidget(
-                    textTheme, widget.restaurants.menus!.foods, 'Makanan', true),
-                _itemRestoWidget(
-                    textTheme, widget.restaurants.menus!.drinks, 'Minuman', false),
+                _detailResto(textTheme),
+                _itemRestoWidget(textTheme, widget.restaurants.menus!.foods,
+                    'Makanan', true),
+                _itemRestoWidget(textTheme, widget.restaurants.menus!.drinks,
+                    'Minuman', false),
               ],
             ),
           ),
@@ -103,16 +109,17 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 
-  Widget _detailResto() {
+  Widget _detailResto(TextTheme textTheme) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 28.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.only(top: 28.0, bottom: 16.0),
             child: Text(
               'Detail Restaurant',
+              style: textTheme.titleMedium,
             ),
           ),
           Text(
@@ -151,6 +158,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
         children: [
           Text(
             type,
+            style: textTheme.titleMedium,
           ),
           ListView.builder(
             shrinkWrap: true,

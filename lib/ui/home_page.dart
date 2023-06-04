@@ -22,12 +22,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: _buildListRestoFav(context),
     );
   }
 
   FutureBuilder<String> _buildListRestoFav(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+
     return FutureBuilder<String>(
       future: DefaultAssetBundle.of(context)
           .loadString('assets/local_restaurant.json'),
@@ -62,22 +65,25 @@ class _HomePageState extends State<HomePage> {
         return ListView(
           children: [
             SearchAnchors(restaurants: restaurants),
-            _listKota(cities),
-            _listFavResto(cityRestaurants),
-            _listRestoNusa(restaurants)
+            _listKota(cities, textTheme),
+            _listFavResto(cityRestaurants, textTheme),
+            _listRestoNusa(restaurants, textTheme)
           ],
         );
       },
     );
   }
 
-  Widget _listRestoNusa(List<Restaurants> restaurants) {
+  Widget _listRestoNusa(List<Restaurants> restaurants, TextTheme textTheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.only(top: 28, bottom: 16, left: 16.0),
-          child: Text('Restoran Nusantara'),
+          child: Text(
+            'Restoran Nusantara',
+            style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
+          ),
         ),
         ListView.separated(
           separatorBuilder: (context, index) => const SizedBox(height: 12),
@@ -108,13 +114,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _listFavResto(List<Restaurants> cityRestaurants) {
+  Widget _listFavResto(List<Restaurants> cityRestaurants, TextTheme textTheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 16, left: 16.0),
-          child: Text('Restoran Favorit di ${city == '' ? 'Nusantara' : city}'),
+          child: Text(
+            'Restoran Favorit di ${city == '' ? 'Nusantara' : city}',
+            style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
+          ),
         ),
         SizedBox(
           height: 280,
@@ -146,7 +155,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _listKota(List<String> cities) {
+  Widget _listKota(List<String> cities, TextTheme textTheme) {
     return SizedBox(
       height: 80,
       child: ListView.separated(

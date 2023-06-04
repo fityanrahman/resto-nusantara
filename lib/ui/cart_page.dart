@@ -72,7 +72,10 @@ class _CartPageState extends State<CartPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Ringkasan Pembayaran'),
+          Text(
+            'Ringkasan Pembayaran',
+            style: textTheme.titleMedium,
+          ),
           const SizedBox(
             height: 12,
           ),
@@ -127,62 +130,83 @@ class _CartPageState extends State<CartPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Opsi Pengiriman'),
+          Text(
+            'Opsi Pengiriman',
+            style: textTheme.titleMedium,
+          ),
           const SizedBox(
             height: 12,
           ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -4),
-            contentPadding: EdgeInsets.zero,
-            minLeadingWidth: 0,
-            leading: SizedBox(
-              height: 16,
-              width: 16,
-              child: Transform.scale(
-                scale: 0.8,
-                child: Radio(
-                  value: true,
-                  groupValue: regular,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      regular = value!;
-                      ongkir = 12000;
-                    });
-                  },
+          InkWell(
+            onTap: () {
+              setState(() {
+                regular = true;
+              });
+            },
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            child: ListTile(
+              visualDensity: const VisualDensity(vertical: -4),
+              contentPadding: EdgeInsets.zero,
+              minLeadingWidth: 0,
+              leading: SizedBox(
+                height: 16,
+                width: 16,
+                child: Transform.scale(
+                  scale: 0.8,
+                  child: Radio(
+                    value: true,
+                    groupValue: regular,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        regular = value!;
+                        ongkir = 12000;
+                      });
+                    },
+                  ),
                 ),
               ),
-            ),
-            title: const Text('Reguler'),
-            trailing: Text(
-              'Rp 12.000',
-              style: textTheme.bodyLarge,
+              title: const Text('Reguler'),
+              trailing: Text(
+                'Rp 12.000',
+                style: textTheme.bodyLarge,
+              ),
             ),
           ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -4),
-            contentPadding: EdgeInsets.zero,
-            minLeadingWidth: 0,
-            leading: SizedBox(
-              height: 16,
-              width: 16,
-              child: Transform.scale(
-                scale: 0.8,
-                child: Radio(
-                  value: false,
-                  groupValue: regular,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      regular = value!;
-                      ongkir = 5000;
-                    });
-                  },
+          InkWell(
+            onTap: () {
+              setState(() {
+                regular = false;
+              });
+            },
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            child: ListTile(
+              visualDensity: const VisualDensity(vertical: -4),
+              contentPadding: EdgeInsets.zero,
+              minLeadingWidth: 0,
+              leading: SizedBox(
+                height: 16,
+                width: 16,
+                child: Transform.scale(
+                  scale: 0.8,
+                  child: Radio(
+                    value: false,
+                    groupValue: regular,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        regular = value!;
+                        ongkir = 5000;
+                      });
+                    },
+                  ),
                 ),
               ),
-            ),
-            title: const Text('Hemat'),
-            trailing: Text(
-              'Rp 5.000',
-              style: textTheme.bodyLarge,
+              title: const Text('Hemat'),
+              trailing: Text(
+                'Rp 5.000',
+                style: textTheme.bodyLarge,
+              ),
             ),
           ),
         ],

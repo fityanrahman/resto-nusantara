@@ -13,6 +13,7 @@ class ListRestoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = getCurrentColorScheme(context);
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
       width: double.infinity,
@@ -55,11 +56,23 @@ class ListRestoWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(restaurants.name!),
+                Text(
+                  restaurants.name!,
+                  style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSecondaryContainer,
+                      fontWeight: FontWeight.w700),
+                  // style: TextStyle(color: colorScheme.onSecondaryContainer),
+                ),
+                SizedBox(height: 4),
                 Text(restaurants.city!),
+                SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.star),
+                    const Icon(
+                      Icons.star,
+                      size: 16,
+                    ),
+                    SizedBox(width: 4),
                     Text(restaurants.rating.toString()),
                   ],
                 )
