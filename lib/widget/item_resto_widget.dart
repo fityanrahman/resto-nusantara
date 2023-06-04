@@ -144,7 +144,6 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
                     color: colorScheme.onSecondary),
           ),
         ),
-        // ),
       ),
       title: Text(
         widget.order.name,

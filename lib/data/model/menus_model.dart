@@ -8,17 +8,9 @@ class Menus {
 
   Menus.fromJson(Map<String, dynamic> json) {
     if (json['foods'] != null) {
-      // foods = <Foods>[];
-      // json['foods'].forEach((v) {
-      //   foods!.add(new Foods.fromJson(v));
-      // });
       foods = json['foods'].map<Foods>((food) => Foods.fromJson(food)).toList();
     }
     if (json['drinks'] != null) {
-      // drinks = <Drinks>[];
-      // json['drinks'].forEach((v) {
-      //   drinks!.add(new Drinks.fromJson(v));
-      // });
       drinks = json['drinks']
           .map<Foods>((drink) => Foods.fromJson(drink))
           .toList();

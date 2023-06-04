@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 ThemeMode themeMode = ThemeMode.system;
 Color themeColor = Colors.yellow;
-// ColorScheme colorScheme = ColorScheme.fromSeed(seedColor: themeColor);
-
 
 ThemeData lightTheme = ThemeData(
   colorSchemeSeed: themeColor,

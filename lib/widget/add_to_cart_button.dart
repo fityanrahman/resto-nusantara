@@ -32,7 +32,6 @@ class _AddToCartButtonState extends State<AddToCartButton> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text('Lanjut Bayar'),
-                // Text(widget.restoName),
               ],
             ),
           ),

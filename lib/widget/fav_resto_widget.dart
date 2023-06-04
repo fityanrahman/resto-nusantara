@@ -19,11 +19,9 @@ class FavRestoWidget extends StatelessWidget {
       aspectRatio: 1,
       child: Container(
         height: 280,
-        // padding: const EdgeInsets.all(24),
         alignment: Alignment.bottomLeft,
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
-          // color: Colors.grey,
           borderRadius: const BorderRadius.all(
             Radius.circular(24),
           ),
@@ -63,7 +61,6 @@ class FavRestoWidget extends StatelessWidget {
                     style: textTheme.bodyLarge?.copyWith(
                         color: colorScheme.onSecondaryContainer,
                         fontWeight: FontWeight.w700),
-                    // style: TextStyle(color: colorScheme.onSecondaryContainer),
                   ),
                   SizedBox(height: 4),
                   Text(restaurants.city!),

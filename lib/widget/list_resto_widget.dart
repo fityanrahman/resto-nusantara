@@ -21,7 +21,6 @@ class ListRestoWidget extends StatelessWidget {
       alignment: Alignment.bottomLeft,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
-        // color: Colors.grey,
         borderRadius: const BorderRadius.all(
           Radius.circular(16),
         ),
@@ -61,7 +60,6 @@ class ListRestoWidget extends StatelessWidget {
                   style: textTheme.bodyLarge?.copyWith(
                       color: colorScheme.onSecondaryContainer,
                       fontWeight: FontWeight.w700),
-                  // style: TextStyle(color: colorScheme.onSecondaryContainer),
                 ),
                 SizedBox(height: 4),
                 Text(restaurants.city!),
