@@ -66,9 +66,8 @@ class ListRestoWidget extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: 2),
                 Text(restaurants.city!),
-                SizedBox(height: 4),
                 Row(
                   children: [
                     const Icon(

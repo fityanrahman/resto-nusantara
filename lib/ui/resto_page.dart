@@ -1,3 +1,4 @@
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:shadow_overlay/shadow_overlay.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
@@ -50,8 +51,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
                       width: double.infinity,
                       height: double.infinity,
                       fit: BoxFit.cover,
-                      errorBuilder: (ctx, error, _) =>
-                          const Center(child: Icon(Icons.error),),
+                      errorBuilder: (ctx, error, _) => const Center(
+                        child: Icon(Icons.error),
+                      ),
                     ),
                   ),
                 ),
@@ -133,15 +135,17 @@ class _RestaurantPageState extends State<RestaurantPage> {
           Padding(
             padding: EdgeInsets.only(top: 28.0, bottom: 16.0),
             child: Text(
-              'Detail Restaurant',
+              'Detail Restoran',
               style: textTheme.titleMedium,
             ),
           ),
-          Text(
+          ExpandableText(
             widget.restaurants.description!,
             maxLines: 3,
-            overflow: TextOverflow.ellipsis,
+            expandText: 'tampilkan lebih banyak',
+            collapseText: 'tampilkan lebih sedikit',
             textAlign: TextAlign.justify,
+            animation: true,
           ),
         ],
       ),
