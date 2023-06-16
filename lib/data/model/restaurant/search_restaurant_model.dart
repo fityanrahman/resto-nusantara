@@ -3,7 +3,7 @@ import 'package:submission_resto/data/model/restaurant/restaurant_short_model.da
 class SearchRestaurant {
   bool error;
   int founded;
-  RestaurantsShort restaurantsShort;
+  List<RestaurantsShort> restaurantsShort;
 
   SearchRestaurant({
     required this.error,
@@ -15,6 +15,7 @@ class SearchRestaurant {
       SearchRestaurant(
         error: json["error"],
         founded: json["founded"],
-        restaurantsShort: RestaurantsShort.fromJson(json["restaurants"]),
+        restaurantsShort: List<RestaurantsShort>.from(
+            json["restaurants"].map((x) => RestaurantsShort.fromJson(x))),
       );
 }
