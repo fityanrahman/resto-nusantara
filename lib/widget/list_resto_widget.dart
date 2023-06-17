@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
-import 'package:submission_resto/data/model/restaurants_model.dart';
+import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 
 class ListRestoWidget extends StatelessWidget {
-  final Restaurants restaurants;
+  final RestaurantsShort restaurants;
 
   const ListRestoWidget({
     required this.restaurants,
@@ -14,6 +15,7 @@ class ListRestoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = getCurrentColorScheme(context);
     final textTheme = Theme.of(context).textTheme;
+    final image = "$baseUrl$imgRestoSmall/${restaurants.pictureId}";
 
     return Container(
       width: double.infinity,
@@ -28,7 +30,7 @@ class ListRestoWidget extends StatelessWidget {
       child: Stack(
         children: [
           Image.network(
-            restaurants.pictureId!,
+            image,
             width: double.infinity,
             height: double.infinity,
             fit: BoxFit.cover,

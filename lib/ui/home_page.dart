@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:submission_resto/common/funs/generate_distinct_cities.dart';
-import 'package:submission_resto/data/model/local_restaurant_model.dart';
-import 'package:submission_resto/data/model/restaurants_model.dart';
+import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
+import 'package:submission_resto/provider/home_provider.dart';
 import 'package:submission_resto/ui/resto_page.dart';
 import 'package:submission_resto/widget/circle_kota_widget.dart';
 import 'package:submission_resto/widget/fav_resto_widget.dart';
@@ -18,54 +19,85 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  var city = '';
+  // var city = '';
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: _buildListRestoFav(context),
     );
   }
 
-  FutureBuilder<String> _buildListRestoFav(BuildContext context) {
+  Widget _buildListRestoFav(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return FutureBuilder<String>(
-      future: DefaultAssetBundle.of(context)
-          .loadString('assets/local_restaurant.json'),
-      builder: (context, snapshot) {
-        final List<Restaurants> restaurants = parseRestaurant(snapshot.data);
+    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+    List<RestaurantsShort> restaurants = [];
+    List<RestaurantsShort> cityRestaurants = [];
+    late var cities;
+    late var city;
 
-        // generate specific city restaurants
-        List<Restaurants> cityRestaurants = restaurants;
+    return Consumer<HomeProvider>(
+      builder: (context, state, _) {
+        if (state.state == ResultState.loading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          if (state.state == ResultState.hasData) {
+            restaurants = state.restaurants;
 
-        //handle data on specific city
-        switch (city) {
-          case '':
+            // generate specific city restaurants
+            city = state.city;
             cityRestaurants = restaurants;
-            break;
-          case 'Semua':
-            cityRestaurants = restaurants;
-            city = 'Nusantara';
-            break;
-          case 'Nusantara':
-            cityRestaurants = restaurants;
-            break;
-          default:
-            cityRestaurants =
-                restaurants.where((element) => element.city == city).toList();
-            //sort restaurant by rating
-            cityRestaurants.sort((a, b) => b.rating!.compareTo(a.rating!));
+
+            //handle data on specific city
+            switch (city) {
+              case '':
+                cityRestaurants = restaurants;
+                break;
+              case 'Semua':
+                cityRestaurants = restaurants;
+                city = 'Nusantara';
+                break;
+              case 'Nusantara':
+                cityRestaurants = restaurants;
+                break;
+              default:
+                cityRestaurants = restaurants
+                    .where((element) => element.city == city)
+                    .toList();
+                //sort restaurant by rating
+                cityRestaurants.sort((a, b) => b.rating!.compareTo(a.rating!));
+            }
+
+            //get distinct cities list
+            cities = generateDistinctCities(restaurants);
+          } else if (state.state == ResultState.noData) {
+            return Center(
+              child: Material(
+                child: Text(state.message),
+              ),
+            );
+          } else if (state.state == ResultState.error) {
+            return Center(
+              child: Material(
+                child: Text(state.message),
+              ),
+            );
+          } else {
+            return Center(
+              child: Material(
+                child: Text(''),
+              ),
+            );
+          }
         }
-
-        //get distinct cities list
-        final cities = generateDistinctCities(restaurants);
 
         return ListView(
           children: [
             SearchAnchors(restaurants: restaurants),
-            _listKota(cities, textTheme),
+            _listKota(cities, textTheme, homeProvider),
             _listFavResto(cityRestaurants, textTheme),
             _listRestoNusa(restaurants, textTheme)
           ],
@@ -74,7 +106,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _listRestoNusa(List<Restaurants> restaurants, TextTheme textTheme) {
+  Widget _listRestoNusa(
+      List<RestaurantsShort> restaurants, TextTheme textTheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -114,16 +147,20 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _listFavResto(List<Restaurants> cityRestaurants, TextTheme textTheme) {
+  Widget _listFavResto(
+      List<RestaurantsShort> cityRestaurants, TextTheme textTheme) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 28, bottom: 16, left: 16.0),
-          child: Text(
-            'Restoran Favorit di ${city == '' ? 'Nusantara' : city}',
-            style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
-          ),
+          child: Consumer<HomeProvider>(builder: (context, state, _) {
+            return Text(
+              'Restoran Favorit di ${state.city == '' ? 'Nusantara' : state.city}',
+              style:
+                  textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
+            );
+          }),
         ),
         SizedBox(
           height: 280,
@@ -155,7 +192,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _listKota(List<String> cities, TextTheme textTheme) {
+  Widget _listKota(
+      List<String> cities, TextTheme textTheme, HomeProvider homeProvider) {
     return SizedBox(
       height: 80,
       child: ListView.separated(
@@ -171,7 +209,7 @@ class _HomePageState extends State<HomePage> {
             child: InkWell(
               onTap: () {
                 setState(() {
-                  city = cities[index];
+                  homeProvider.city = cities[index];
                 });
               },
               child: CircleKotaWidget(

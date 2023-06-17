@@ -11,14 +11,14 @@ class HomeProvider extends ChangeNotifier {
     _fetchAllRestaurant();
   }
 
-  List<RestaurantsShort> _listRestaurant = [];
-  List<RestaurantsShort> _cityRestaurant = [];
+  List<RestaurantsShort> _restaurants = [];
+  List<RestaurantsShort> _cityRestaurants = [];
   late ResultState _state;
   String _message = '';
   String _city = '';
 
-  List<RestaurantsShort> get listRestaurant => _listRestaurant;
-  List<RestaurantsShort> get cityRestaurant => _cityRestaurant;
+  List<RestaurantsShort> get restaurants => _restaurants;
+  List<RestaurantsShort> get cityRestaurants => _cityRestaurants;
   ResultState get state => _state;
   String get message => _message;
   String get city => _city;
@@ -40,7 +40,7 @@ class HomeProvider extends ChangeNotifier {
       } else {
         _state = ResultState.hasData;
         notifyListeners();
-        return _listRestaurant = restaurants.restaurants;
+        return _restaurants = restaurants.restaurants;
       }
     } catch (e) {
       _state = ResultState.error;

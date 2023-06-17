@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:submission_resto/data/model/restaurants_model.dart';
+import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 import 'package:submission_resto/ui/resto_page.dart';
 
 class SearchAnchors extends StatefulWidget {
-  final List<Restaurants> restaurants;
+  final List<RestaurantsShort> restaurants;
 
   const SearchAnchors({required this.restaurants, Key? key}) : super(key: key);
 
@@ -13,7 +13,7 @@ class SearchAnchors extends StatefulWidget {
 
 class _SearchAnchorsState extends State<SearchAnchors> {
   String? selectedColor;
-  List<Restaurants> searchHistory = <Restaurants>[];
+  List<RestaurantsShort> searchHistory = <RestaurantsShort>[];
 
   Iterable<Widget> getHistoryList(SearchController controller) {
     return searchHistory.map(
@@ -73,7 +73,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
         );
   }
 
-  void handleSelection(Restaurants color) {
+  void handleSelection(RestaurantsShort color) {
     setState(() {
       selectedColor = color.name;
       if (searchHistory.length >= 5) {
