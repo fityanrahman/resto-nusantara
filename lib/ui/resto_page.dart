@@ -1,19 +1,21 @@
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shadow_overlay/shadow_overlay.dart';
+import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
-import 'package:submission_resto/data/model/foods_model.dart';
-import 'package:submission_resto/data/model/restaurants_model.dart';
+import 'package:submission_resto/data/model/restaurant/restaurant_detail_model.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
+import 'package:submission_resto/provider/order_provider.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/widget/add_to_cart_button.dart';
 import 'package:submission_resto/widget/item_resto_widget.dart';
 
 class RestaurantPage extends StatefulWidget {
   static const routeName = '/resto-page';
-  final Restaurants restaurants;
+  final String idResto;
 
-  const RestaurantPage({required this.restaurants, Key? key}) : super(key: key);
+  const RestaurantPage({required this.idResto, Key? key}) : super(key: key);
 
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -27,82 +29,99 @@ class _RestaurantPageState extends State<RestaurantPage> {
   bool fav = false;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dataProvider = Provider.of<OrderProvider>(context, listen: false);
+      dataProvider.fetchDetailRestaurant(id: widget.idResto);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final orderPvdr = Provider.of<OrderProvider>(context);
+
     final textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = getCurrentColorScheme(context);
-
     return Scaffold(
-      body: NestedScrollView(
-        physics: const NeverScrollableScrollPhysics(),
-        headerSliverBuilder: (context, isScrolled) {
-          return [
-            SliverAppBar(
-              pinned: true,
-              expandedHeight: 250,
-              flexibleSpace: FlexibleSpaceBar(
-                background: ShadowOverlay(
-                  shadowWidth: 800,
-                  shadowHeight: 200,
-                  shadowColor: colorScheme.surface,
-                  child: Hero(
-                    tag: widget.restaurants.pictureId!,
-                    child: Image.network(
-                      widget.restaurants.pictureId!,
-                      width: double.infinity,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (ctx, error, _) => const Center(
-                        child: Icon(Icons.error),
+      body: orderPvdr.state == ResultState.loading
+          ? Center(child: CircularProgressIndicator())
+          : NestedScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              headerSliverBuilder: (context, isScrolled) {
+                return [
+                  SliverAppBar(
+                    pinned: true,
+                    expandedHeight: 250,
+                    flexibleSpace: FlexibleSpaceBar(
+                      background: ShadowOverlay(
+                        shadowWidth: 800,
+                        shadowHeight: 200,
+                        shadowColor: colorScheme.surface,
+                        child: Hero(
+                          tag:
+                              "$baseUrl$imgRestoMedium${orderPvdr.restaurantDetail.restaurant.pictureId}",
+                          child: Image.network(
+                            "$baseUrl$imgRestoMedium${orderPvdr.restaurantDetail.restaurant.pictureId}",
+                            width: double.infinity,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (ctx, error, _) => const Center(
+                              child: Icon(Icons.error),
+                            ),
+                          ),
+                        ),
+                      ),
+                      centerTitle: true,
+                      title: Text(
+                        orderPvdr.restaurantDetail.restaurant.name,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: colorScheme.onSurface),
                       ),
                     ),
+                    actions: [
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            fav = !fav;
+                          });
+                        },
+                        icon: fav ? Icon(Icons.star) : Icon(Icons.star_outline),
+                      ),
+                    ],
+                  ),
+                ];
+              },
+              body: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _ratingLocResto(
+                          textTheme,
+                          orderPvdr.restaurantDetail.restaurant.rating,
+                          orderPvdr.restaurantDetail.restaurant.city),
+                      _detailResto(textTheme,
+                          orderPvdr.restaurantDetail.restaurant.description),
+                      _itemRestoWidget(
+                        textTheme,
+                        orderPvdr.restaurantDetail.restaurant.menus.foods,
+                        'Makanan',
+                        true,
+                      ),
+                      _itemRestoWidget(
+                        textTheme,
+                        orderPvdr.restaurantDetail.restaurant.menus.drinks,
+                        'Minuman',
+                        false,
+                      ),
+                    ],
                   ),
                 ),
-                centerTitle: true,
-                title: Text(
-                  widget.restaurants.name!,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: colorScheme.onSurface),
-                ),
               ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    setState(() {
-                      fav = !fav;
-                    });
-                  },
-                  icon: fav ? Icon(Icons.star) : Icon(Icons.star_outline),
-                ),
-              ],
             ),
-          ];
-        },
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _ratingLocResto(textTheme),
-                _detailResto(textTheme),
-                _itemRestoWidget(
-                  textTheme,
-                  widget.restaurants.menus!.foods,
-                  'Makanan',
-                  true,
-                ),
-                _itemRestoWidget(
-                  textTheme,
-                  widget.restaurants.menus!.drinks,
-                  'Minuman',
-                  false,
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
       extendBody: true,
       bottomNavigationBar: _lanjutBayar(context),
     );
@@ -126,7 +145,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 
-  Widget _detailResto(TextTheme textTheme) {
+  Widget _detailResto(TextTheme textTheme, String description) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 28.0),
       child: Column(
@@ -140,7 +159,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
             ),
           ),
           ExpandableText(
-            widget.restaurants.description!,
+            description,
             maxLines: 3,
             expandText: 'tampilkan lebih banyak',
             collapseText: 'tampilkan lebih sedikit',
@@ -152,7 +171,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 
-  Widget _ratingLocResto(TextTheme textTheme) {
+  Widget _ratingLocResto(TextTheme textTheme, double rating, String location) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Column(
@@ -167,7 +186,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     size: 16,
                   ),
                   SizedBox(width: 4),
-                  Text(widget.restaurants.rating.toString()),
+                  Text(rating.toString()),
                 ],
               ),
               SizedBox(width: 16),
@@ -178,7 +197,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     size: 16,
                   ),
                   SizedBox(width: 4),
-                  Text(widget.restaurants.city.toString()),
+                  Text(location.toString()),
                 ],
               ),
             ],
@@ -189,7 +208,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 
   Widget _itemRestoWidget(
-      TextTheme textTheme, List<Foods>? food, String type, bool isFood) {
+      TextTheme textTheme, List<Category>? food, String type, bool isFood) {
     List<Order> order = [];
 
     //buat list of Order
@@ -197,7 +216,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
       order.add(
         Order(
           id: '$type${i + 1}',
-          name: food[i].name!,
+          name: food[i].name,
           qty: 0,
           fav: false,
           price: 12000,
@@ -232,7 +251,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 
-  //callback for add order function
+//callback for add order function
   void _tambahTransaksi(Order order) {
     //tambahkan item ke list transaksi
     transaksi.add(order);

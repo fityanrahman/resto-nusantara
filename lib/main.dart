@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:submission_resto/common/style.dart';
 import 'package:submission_resto/data/api/api_service.dart';
-import 'package:submission_resto/data/model/restaurants_model.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/provider/home_provider.dart';
+import 'package:submission_resto/provider/order_provider.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/ui/home_page.dart';
 import 'package:submission_resto/ui/resto_page.dart';
@@ -25,6 +25,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<HomeProvider>(
           create: (context) => HomeProvider(apiService: ApiService()),
         ),
+        ChangeNotifierProvider<OrderProvider>(
+            create: (context) => OrderProvider()),
       ],
       child: MaterialApp(
         title: 'Restoran Nusantara',
@@ -35,8 +37,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomePage.routeName: (context) => const HomePage(),
           RestaurantPage.routeName: (context) => RestaurantPage(
-                restaurants:
-                    ModalRoute.of(context)?.settings.arguments as Restaurants,
+                idResto: ModalRoute.of(context)?.settings.arguments as String,
               ),
           CartPage.routeName: (context) => CartPage(
                 orders:

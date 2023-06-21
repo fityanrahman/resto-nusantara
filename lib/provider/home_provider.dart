@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/data/api/api_service.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
-
-enum ResultState { loading, noData, hasData, error }
 
 class HomeProvider extends ChangeNotifier {
   final ApiService apiService;

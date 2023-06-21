@@ -1,6 +1,3 @@
-import 'package:submission_resto/data/model/restaurant/customer_review_model.dart';
-import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
-
 class RestaurantDetail {
   bool error;
   String message;
@@ -16,8 +13,7 @@ class RestaurantDetail {
       RestaurantDetail(
         error: json["error"],
         message: json["message"],
-        restaurant: Restaurant.fromJson(
-            json["restaurant"].map((x) => RestaurantsShort.fromJson(x))),
+        restaurant: Restaurant.fromJson(json["restaurant"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -95,6 +91,30 @@ class Category {
 
   Map<String, dynamic> toJson() => {
         "name": name,
+      };
+}
+
+class CustomerReview {
+  String name;
+  String review;
+  String date;
+
+  CustomerReview({
+    required this.name,
+    required this.review,
+    required this.date,
+  });
+
+  factory CustomerReview.fromJson(Map<String, dynamic> json) => CustomerReview(
+        name: json["name"],
+        review: json["review"],
+        date: json["date"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "review": review,
+        "date": date,
       };
 }
 

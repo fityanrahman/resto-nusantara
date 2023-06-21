@@ -15,7 +15,7 @@ class FavRestoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = getCurrentColorScheme(context);
     final textTheme = Theme.of(context).textTheme;
-    final image = "$baseUrl$imgRestoMedium/${restaurants.pictureId}";
+    final image = "$baseUrl$imgRestoMedium${restaurants.pictureId}";
 
     return AspectRatio(
       aspectRatio: 1,

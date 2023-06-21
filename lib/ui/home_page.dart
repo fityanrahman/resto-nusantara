@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/generate_distinct_cities.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 import 'package:submission_resto/provider/home_provider.dart';
@@ -132,7 +133,7 @@ class _HomePageState extends State<HomePage> {
               child: InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, RestaurantPage.routeName,
-                      arguments: restaurants[index]);
+                      arguments: restaurants[index].id);
                 },
                 child: ListRestoWidget(
                   restaurants: restaurants[index],
@@ -176,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                 child: InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, RestaurantPage.routeName,
-                        arguments: cityRestaurants[index]);
+                        arguments: cityRestaurants[index].id);
                   },
                   child: FavRestoWidget(
                     restaurants: cityRestaurants[index],

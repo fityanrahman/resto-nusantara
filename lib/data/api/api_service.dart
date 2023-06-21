@@ -21,12 +21,28 @@ class ApiService {
         throw Exception('Gagal memuat daftar restoran');
       }
     } on SocketException {
-      throw Exception('Silakan periksa koneksi internetmu dan coba lagi');
+      throw Exception(errorInternet);
     } on TimeoutException {
-      throw Exception('Waktu koneksi habis. Silakan coba lagi');
+      throw Exception(errorTimeout);
     }
   }
 
-// Future<RestaurantDetail> getDetailRestaurant() async {
-// }
+  Future getDetailRestaurant({String? id}) async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl$detailResto$id'));
+      final statusCode = response.statusCode;
+      final result = jsonDecode(response.body);
+
+      if (statusCode == 200) {
+        return RestaurantDetail.fromJson(result);
+      } else {
+        print('$baseUrl$detailResto$id');
+        throw Exception('Gagal memuat detail restoran');
+      }
+    } on SocketException {
+      throw Exception(errorInternet);
+    } on TimeoutException {
+      throw Exception(errorTimeout);
+    }
+  }
 }

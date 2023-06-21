@@ -72,7 +72,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
 
   Widget _itemResult(
       RestaurantsShort filteredColor, SearchController controller) {
-    final image = "$baseUrl$imgRestoMedium/${filteredColor.pictureId}";
+    final image = "$baseUrl$imgRestoMedium${filteredColor.pictureId}";
 
     return ListTile(
       leading: ClipOval(
@@ -110,7 +110,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       }
       searchHistory.insert(0, color);
     });
-    Navigator.pushNamed(context, RestaurantPage.routeName, arguments: color);
+    Navigator.pushNamed(context, RestaurantPage.routeName, arguments: color.id);
   }
 
   @override
