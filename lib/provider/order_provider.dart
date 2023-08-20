@@ -9,8 +9,6 @@ import 'package:submission_resto/data/model/restaurant/restaurant_detail_model.d
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 
 class OrderProvider extends ChangeNotifier {
-  final apiService = ApiService();
-
   ResultState _state = ResultState.loading;
   String _message = '';
 
@@ -65,11 +63,15 @@ class OrderProvider extends ChangeNotifier {
 
   Future<dynamic> fetchDetailRestaurant({required String id}) async {
     try {
-      _state = ResultState.loading;
+      if (_state != ResultState.loading) {
+        _state = ResultState.loading;
+        notifyListeners();
+      }
+
       _clearOrderDatas();
 
       final RestaurantDetail restaurant =
-          await apiService.getDetailRestaurant(id: id);
+          await ApiService().getDetailRestaurant(id: id);
       _orderFood = generateListOrder(
         restaurant.restaurant.menus.foods,
         'Makanan',

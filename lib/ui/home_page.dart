@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     return Consumer<HomeProvider>(
       builder: (context, state, _) {
         if (state.state == ResultState.loading) {
-          return const Center(
+          return Center(
             child: CircularProgressIndicator(),
           );
         } else {
@@ -76,7 +76,20 @@ class _HomePageState extends State<HomePage> {
           } else {
             return Center(
               child: Material(
-                child: Text(state.message),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.network_check),
+                    Text(state.message),
+                    TextButton(
+                      onPressed: () async {
+                        // state.fetchDetailRestaurant(id: widget.idResto);
+                        state.fetchAllRestaurant();
+                      },
+                      child: Text('Refresh'),
+                    )
+                  ],
+                ),
               ),
             );
           }

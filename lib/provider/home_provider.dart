@@ -11,7 +11,7 @@ class HomeProvider extends ChangeNotifier {
   final ApiService apiService;
 
   HomeProvider({required this.apiService}) {
-    _fetchAllRestaurant();
+    fetchAllRestaurant();
   }
 
   List<RestaurantsShort> _restaurants = [];
@@ -39,7 +39,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<dynamic> _fetchAllRestaurant() async {
+  Future<dynamic> fetchAllRestaurant() async {
     try {
       _state = ResultState.loading;
       notifyListeners();
