@@ -1,4 +1,4 @@
-enum ResultState { loading, noData, hasData, error }
+enum ResultState { loading, noData, hasData, error, timeoutError, networkError }
 
 const baseUrl = 'https://restaurant-api.dicoding.dev/';
 const listResto = 'list';

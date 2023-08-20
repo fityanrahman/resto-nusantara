@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:shadow_overlay/shadow_overlay.dart';
 import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
-import 'package:submission_resto/data/model/restaurant/restaurant_detail_model.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/provider/order_provider.dart';
 import 'package:submission_resto/ui/cart_page.dart';
@@ -22,31 +21,27 @@ class RestaurantPage extends StatefulWidget {
 }
 
 class _RestaurantPageState extends State<RestaurantPage> {
-  List<Order> transaksi = [];
-  var idSet = <String>{};
-  var distinct = <Order>[];
-
-  bool fav = false;
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final dataProvider = Provider.of<OrderProvider>(context, listen: false);
-      dataProvider.fetchDetailRestaurant(id: widget.idResto);
-    });
+    final dataProvider = Provider.of<OrderProvider>(context, listen: false);
+    dataProvider.fetchDetailRestaurant(id: widget.idResto);
   }
 
   @override
   Widget build(BuildContext context) {
-    final orderPvdr = Provider.of<OrderProvider>(context);
-
     final textTheme = Theme.of(context).textTheme;
     ColorScheme colorScheme = getCurrentColorScheme(context);
+
     return Scaffold(
-      body: orderPvdr.state == ResultState.loading
-          ? Center(child: CircularProgressIndicator())
-          : NestedScrollView(
+      body: Consumer<OrderProvider>(builder: (context, state, _) {
+        switch (state.state) {
+          case ResultState.loading:
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          case ResultState.hasData:
+            return NestedScrollView(
               physics: const NeverScrollableScrollPhysics(),
               headerSliverBuilder: (context, isScrolled) {
                 return [
@@ -60,9 +55,9 @@ class _RestaurantPageState extends State<RestaurantPage> {
                         shadowColor: colorScheme.surface,
                         child: Hero(
                           tag:
-                              "$baseUrl$imgRestoMedium${orderPvdr.restaurantDetail.restaurant.pictureId}",
+                              "$baseUrl$imgRestoMedium${state.restaurantDetail.restaurant.pictureId}",
                           child: Image.network(
-                            "$baseUrl$imgRestoMedium${orderPvdr.restaurantDetail.restaurant.pictureId}",
+                            "$baseUrl$imgRestoMedium${state.restaurantDetail.restaurant.pictureId}",
                             width: double.infinity,
                             height: double.infinity,
                             fit: BoxFit.cover,
@@ -74,7 +69,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                       ),
                       centerTitle: true,
                       title: Text(
-                        orderPvdr.restaurantDetail.restaurant.name,
+                        state.restaurantDetail.restaurant.name,
                         textAlign: TextAlign.center,
                         style: TextStyle(color: colorScheme.onSurface),
                       ),
@@ -82,11 +77,14 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     actions: [
                       IconButton(
                         onPressed: () {
-                          setState(() {
-                            fav = !fav;
-                          });
+                          state.fav = !state.fav;
                         },
-                        icon: fav ? Icon(Icons.star) : Icon(Icons.star_outline),
+                        icon: state.fav
+                            ? Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              )
+                            : Icon(Icons.star_outline),
                       ),
                     ],
                   ),
@@ -100,20 +98,23 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _ratingLocResto(
-                          textTheme,
-                          orderPvdr.restaurantDetail.restaurant.rating,
-                          orderPvdr.restaurantDetail.restaurant.city),
-                      _detailResto(textTheme,
-                          orderPvdr.restaurantDetail.restaurant.description),
+                        textTheme,
+                        state.restaurantDetail.restaurant.rating,
+                        state.restaurantDetail.restaurant.city,
+                      ),
+                      _detailResto(
+                        textTheme,
+                        state.restaurantDetail.restaurant.description,
+                      ),
                       _itemRestoWidget(
                         textTheme,
-                        orderPvdr.restaurantDetail.restaurant.menus.foods,
+                        state.orderFood,
                         'Makanan',
                         true,
                       ),
                       _itemRestoWidget(
                         textTheme,
-                        orderPvdr.restaurantDetail.restaurant.menus.drinks,
+                        state.orderDrink,
                         'Minuman',
                         false,
                       ),
@@ -121,28 +122,79 @@ class _RestaurantPageState extends State<RestaurantPage> {
                   ),
                 ),
               ),
-            ),
+            );
+          case ResultState.networkError:
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.network_check),
+                  Text(state.message),
+                  TextButton(
+                    onPressed: () {
+                      state.fetchDetailRestaurant(id: widget.idResto);
+                    },
+                    child: Text('Refresh'),
+                  )
+                ],
+              ),
+            );
+          case ResultState.timeoutError:
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.timer_off),
+                  Text(state.message),
+                ],
+              ),
+            );
+          default:
+            return Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.warning),
+                  Text(state.message),
+                  TextButton(
+                    onPressed: () {
+                      state.fetchDetailRestaurant(id: widget.idResto);
+                    },
+                    child: Text('Refresh'),
+                  )
+                ],
+              ),
+            );
+        }
+      }),
       extendBody: true,
       bottomNavigationBar: _lanjutBayar(context),
     );
   }
 
   Widget _lanjutBayar(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SizedBox(
-        height: 60,
-        child: AddToCartButton(
-          onPress: () {
-            Navigator.pushNamed(
-              context,
-              CartPage.routeName,
-              arguments: distinct,
-            );
-          },
-        ),
-      ),
-    );
+    return Consumer<OrderProvider>(builder: (context, order, _) {
+      return order.distinct.length >= 1
+          ? Padding(
+              padding: const EdgeInsets.all(16),
+              child: SizedBox(
+                height: 60,
+                child: AddToCartButton(
+                  onPress: () {
+                    Navigator.pushNamed(
+                      context,
+                      CartPage.routeName,
+                      arguments: order.distinct,
+                    );
+                  },
+                  restoName: order.restaurantDetail.restaurant.name,
+                  itemCount: order.itemCount,
+                  amount: order.amount,
+                ),
+              ),
+            )
+          : SizedBox();
+    });
   }
 
   Widget _detailResto(TextTheme textTheme, String description) {
@@ -208,25 +260,11 @@ class _RestaurantPageState extends State<RestaurantPage> {
   }
 
   Widget _itemRestoWidget(
-      TextTheme textTheme, List<Category>? food, String type, bool isFood) {
-    List<Order> order = [];
-
-    //buat list of Order
-    for (int i = 0; i < food!.length; i++) {
-      order.add(
-        Order(
-          id: '$type${i + 1}',
-          name: food[i].name,
-          qty: 0,
-          fav: false,
-          price: 12000,
-          food: isFood,
-        ),
-      );
-    }
+      TextTheme textTheme, List<Order> food, String type, bool isFood) {
+    final order = Provider.of<OrderProvider>(context, listen: false);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.only(bottom: 28.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -234,44 +272,24 @@ class _RestaurantPageState extends State<RestaurantPage> {
             type,
             style: textTheme.titleMedium,
           ),
+          SizedBox(
+            height: 8,
+          ),
           ListView.builder(
+            padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: order.length,
+            itemCount: food.length,
             itemBuilder: (context, index) {
               return ItemRestoWidget(
                 textTheme: textTheme,
-                order: order[index],
-                tambahTransaksi: _tambahTransaksi,
+                order: food[index],
+                tambahTransaksi: order.tambahTransaksi,
               );
             },
           ),
         ],
       ),
     );
-  }
-
-//callback for add order function
-  void _tambahTransaksi(Order order) {
-    //tambahkan item ke list transaksi
-    transaksi.add(order);
-
-    //buat set of string idSet. kemudian tambah item ke dalam list distinct berdasarkan idSet
-    for (var d in transaksi) {
-      if (idSet.add(d.id)) {
-        distinct.add(d);
-      }
-    }
-
-    //hapus item dengan qty < 1 dari list distinct
-    for (int i = 0; i < distinct.length; i++) {
-      if (distinct[i].qty < 1) {
-        idSet.remove(distinct[i].id);
-        distinct.remove(distinct[i]);
-      }
-    }
-
-    //hapus list transaksi
-    transaksi.clear();
   }
 }

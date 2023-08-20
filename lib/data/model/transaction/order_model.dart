@@ -14,4 +14,10 @@ class Order {
     required this.price,
     required this.food,
   });
+
+  //untuk memudahkan debug (print/log)
+  @override
+  String toString() {
+    return 'Order{id: $id,qty: $qty, price: $price}';
+  }
 }

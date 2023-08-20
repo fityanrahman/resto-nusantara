@@ -19,8 +19,6 @@ class ItemRestoWidget extends StatefulWidget {
 }
 
 class _ItemRestoWidgetState extends State<ItemRestoWidget> {
-  List<Order> transaction = [];
-
   @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = getCurrentColorScheme(context);
@@ -55,10 +53,8 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
           widget.order.qty == 0
               ? ElevatedButton(
                   onPressed: () {
-                    setState(() {
-                      widget.order.qty++;
-                      _addTransaction(widget.order);
-                    });
+                    widget.order.qty++;
+                    widget.tambahTransaksi(widget.order);
                   },
                   child: Text(
                     'Tambah',
@@ -77,7 +73,7 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
                       onPressed: () {
                         setState(() {
                           widget.order.qty--;
-                          _addTransaction(widget.order);
+                          widget.tambahTransaksi(widget.order);
                         });
                       },
                       child: const Icon(
@@ -99,7 +95,7 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
                       onPressed: () {
                         setState(() {
                           widget.order.qty++;
-                          _addTransaction(widget.order);
+                          widget.tambahTransaksi(widget.order);
                         });
                       },
                       child: const Icon(
@@ -155,11 +151,5 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
         'Rp ${widget.order.price.toString()}',
       ),
     );
-  }
-
-  //add order function
-  void _addTransaction(Order order) {
-    transaction.add(order);
-    widget.tambahTransaksi(order);
   }
 }

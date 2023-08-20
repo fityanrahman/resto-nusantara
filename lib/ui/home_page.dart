@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
     List<RestaurantsShort> restaurants = [];
     List<RestaurantsShort> cityRestaurants = [];
     late var cities;
-    late var city;
 
     return Consumer<HomeProvider>(
       builder: (context, state, _) {
@@ -47,27 +46,17 @@ class _HomePageState extends State<HomePage> {
             restaurants = state.restaurants;
 
             // generate specific city restaurants
-            city = state.city;
             cityRestaurants = restaurants;
 
             //handle data on specific city
-            switch (city) {
-              case '':
-                cityRestaurants = restaurants;
-                break;
-              case 'Semua':
-                cityRestaurants = restaurants;
-                city = 'Nusantara';
-                break;
-              case 'Nusantara':
-                cityRestaurants = restaurants;
-                break;
-              default:
-                cityRestaurants = restaurants
-                    .where((element) => element.city == city)
-                    .toList();
-                //sort restaurant by rating
-                cityRestaurants.sort((a, b) => b.rating!.compareTo(a.rating!));
+            if (state.city == 'Nusantara') {
+              cityRestaurants = restaurants;
+            } else {
+              cityRestaurants = restaurants
+                  .where((element) => element.city == state.city)
+                  .toList();
+              //sort restaurant by rating
+              cityRestaurants.sort((a, b) => b.rating!.compareTo(a.rating!));
             }
 
             //get distinct cities list
@@ -87,7 +76,7 @@ class _HomePageState extends State<HomePage> {
           } else {
             return Center(
               child: Material(
-                child: Text(''),
+                child: Text(state.message),
               ),
             );
           }
@@ -155,7 +144,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.only(top: 28, bottom: 16, left: 16.0),
           child: Consumer<HomeProvider>(builder: (context, state, _) {
             return Text(
-              'Restoran Favorit di ${state.city == '' ? 'Nusantara' : state.city}',
+              'Restoran Favorit di ${state.city}',
               style:
                   textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),
             );

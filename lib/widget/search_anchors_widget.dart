@@ -13,25 +13,25 @@ class SearchAnchors extends StatefulWidget {
 }
 
 class _SearchAnchorsState extends State<SearchAnchors> {
-  String? selectedColor;
+  String? selectedResto;
   List<RestaurantsShort> searchHistory = <RestaurantsShort>[];
 
   Iterable<Widget> getHistoryList(SearchController controller) {
     return searchHistory.map(
-      (color) => ListTile(
+      (resto) => ListTile(
         leading: const Icon(Icons.history),
-        title: Text(color.name!),
+        title: Text(resto.name!),
         trailing: IconButton(
           icon: const Icon(Icons.transit_enterexit),
           onPressed: () {
-            controller.text = color.name!;
+            controller.text = resto.name!;
             controller.selection =
                 TextSelection.collapsed(offset: controller.text.length);
           },
         ),
         onTap: () {
-          controller.closeView(color.name!);
-          handleSelection(color);
+          controller.closeView(resto.name!);
+          handleSelection(resto);
         },
       ),
     );
@@ -42,10 +42,10 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     List<RestaurantsShort> suggestResult = [];
 
     suggestResult = widget.restaurants
-        .where((color) =>
-            color.name!.toLowerCase().contains(input.toLowerCase()) ||
-            color.city!.toLowerCase().contains(input.toLowerCase()) ||
-            color.description!.toLowerCase().contains(input.toLowerCase()))
+        .where((resto) =>
+            resto.name!.toLowerCase().contains(input.toLowerCase()) ||
+            resto.city!.toLowerCase().contains(input.toLowerCase()) ||
+            resto.description!.toLowerCase().contains(input.toLowerCase()))
         .toList();
 
     return suggestResult.length >= 1
@@ -104,7 +104,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
 
   void handleSelection(RestaurantsShort color) {
     setState(() {
-      selectedColor = color.name;
+      selectedResto = color.name;
       if (searchHistory.length >= 5) {
         searchHistory.removeLast();
       }

@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:submission_resto/common/const_api.dart';
+import 'package:submission_resto/common/funs/custom_exception.dart';
 import 'package:submission_resto/data/model/restaurant/list_restaurant_model.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_detail_model.dart';
 
@@ -18,12 +19,13 @@ class ApiService {
       if (statusCode == 200) {
         return ListRestaurant.fromJson(result);
       } else {
-        throw Exception('Gagal memuat daftar restoran');
+        throw CustomException(
+            'Gagal memuat daftar restoran', ResultState.noData);
       }
     } on SocketException {
-      throw Exception(errorInternet);
+      throw SocketException(errorInternet);
     } on TimeoutException {
-      throw Exception(errorTimeout);
+      throw TimeoutException(errorTimeout);
     }
   }
 
@@ -36,13 +38,14 @@ class ApiService {
       if (statusCode == 200) {
         return RestaurantDetail.fromJson(result);
       } else {
-        print('$baseUrl$detailResto$id');
-        throw Exception('Gagal memuat detail restoran');
+        print('apa nih : $baseUrl$detailResto$id');
+        throw CustomException(
+            'Gagal memuat detail restoran', ResultState.noData);
       }
     } on SocketException {
-      throw Exception(errorInternet);
+      throw SocketException(errorInternet);
     } on TimeoutException {
-      throw Exception(errorTimeout);
+      throw TimeoutException(errorTimeout);
     }
   }
 }
