@@ -64,7 +64,20 @@ class _HomePageState extends State<HomePage> {
           } else if (state.state == ResultState.noData) {
             return Center(
               child: Material(
-                child: Text(state.message),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.warning),
+                    Text(state.message),
+                    TextButton(
+                      onPressed: () async {
+                        // state.fetchDetailRestaurant(id: widget.idResto);
+                        state.fetchAllRestaurant();
+                      },
+                      child: Text('Refresh'),
+                    )
+                  ],
+                ),
               ),
             );
           } else if (state.state == ResultState.error) {
@@ -97,7 +110,9 @@ class _HomePageState extends State<HomePage> {
 
         return ListView(
           children: [
-            SearchAnchors(restaurants: restaurants),
+            SearchAnchors(
+                // restaurants: restaurants
+                ),
             _listKota(cities, textTheme, homeProvider),
             _listFavResto(cityRestaurants, textTheme),
             _listRestoNusa(restaurants, textTheme)

@@ -5,6 +5,7 @@ import 'package:submission_resto/data/api/api_service.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/provider/home_provider.dart';
 import 'package:submission_resto/provider/order_provider.dart';
+import 'package:submission_resto/provider/search_provider.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/ui/home_page.dart';
 import 'package:submission_resto/ui/resto_page.dart';
@@ -27,6 +28,8 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<OrderProvider>(
             create: (context) => OrderProvider()),
+        ChangeNotifierProvider<SearchProvider>(
+            create: (context) => SearchProvider()),
       ],
       child: MaterialApp(
         title: 'Restoran Nusantara',

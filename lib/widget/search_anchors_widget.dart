@@ -1,12 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
+import 'package:submission_resto/provider/search_provider.dart';
 import 'package:submission_resto/ui/resto_page.dart';
 
 class SearchAnchors extends StatefulWidget {
-  final List<RestaurantsShort> restaurants;
-
-  const SearchAnchors({required this.restaurants, Key? key}) : super(key: key);
+  const SearchAnchors({Key? key}) : super(key: key);
 
   @override
   State<SearchAnchors> createState() => _SearchAnchorsState();
@@ -37,25 +39,28 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     );
   }
 
-  Iterable<Widget> getResult(SearchController controller) {
+  Future<Iterable<Widget>> getResult(SearchController controller) async {
     final String input = controller.value.text;
+
+    String message = '';
     List<RestaurantsShort> suggestResult = [];
 
-    suggestResult = widget.restaurants
-        .where((resto) =>
-            resto.name!.toLowerCase().contains(input.toLowerCase()) ||
-            resto.city!.toLowerCase().contains(input.toLowerCase()) ||
-            resto.description!.toLowerCase().contains(input.toLowerCase()))
-        .toList();
+    final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+
+    try {
+      suggestResult = await searchProvider.searchRestaurant(query: input);
+    } catch (e) {
+      message = searchProvider.message;
+    }
 
     return suggestResult.length >= 1
         ? getSuggestions(suggestResult, controller)
         : <Widget>[
             Container(
               height: MediaQuery.of(context).size.height * 0.75,
-              child: const Center(
+              child: Center(
                 child: Text(
-                  'Tidak ada hasil pencarian',
+                  message,
                   style: TextStyle(color: Colors.grey),
                 ),
               ),
@@ -66,13 +71,12 @@ class _SearchAnchorsState extends State<SearchAnchors> {
   Iterable<Widget> getSuggestions(
       List<RestaurantsShort> suggestResult, SearchController controller) {
     return suggestResult.map(
-      (filteredColor) => _itemResult(filteredColor, controller),
+      (resto) => _itemResult(resto, controller),
     );
   }
 
-  Widget _itemResult(
-      RestaurantsShort filteredColor, SearchController controller) {
-    final image = "$baseUrl$imgRestoMedium${filteredColor.pictureId}";
+  Widget _itemResult(RestaurantsShort resto, SearchController controller) {
+    final image = "$baseUrl$imgRestoMedium${resto.pictureId}";
 
     return ListTile(
       leading: ClipOval(
@@ -86,31 +90,31 @@ class _SearchAnchorsState extends State<SearchAnchors> {
           ),
         ),
       ),
-      title: Text(filteredColor.name!),
+      title: Text(resto.name!),
       trailing: IconButton(
         icon: const Icon(Icons.transit_enterexit),
         onPressed: () {
-          controller.text = filteredColor.name!;
+          controller.text = resto.name!;
           controller.selection =
               TextSelection.collapsed(offset: controller.text.length);
         },
       ),
       onTap: () {
-        controller.closeView(filteredColor.name!);
-        handleSelection(filteredColor);
+        controller.closeView(resto.name!);
+        handleSelection(resto);
       },
     );
   }
 
-  void handleSelection(RestaurantsShort color) {
+  void handleSelection(RestaurantsShort resto) {
     setState(() {
-      selectedResto = color.name;
+      selectedResto = resto.name;
       if (searchHistory.length >= 5) {
         searchHistory.removeLast();
       }
-      searchHistory.insert(0, color);
+      searchHistory.insert(0, resto);
     });
-    Navigator.pushNamed(context, RestaurantPage.routeName, arguments: color.id);
+    Navigator.pushNamed(context, RestaurantPage.routeName, arguments: resto.id);
   }
 
   @override
