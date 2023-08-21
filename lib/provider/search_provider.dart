@@ -9,26 +9,22 @@ import 'package:submission_resto/data/model/restaurant/restaurant_short_model.da
 import 'package:submission_resto/data/model/restaurant/search_restaurant_model.dart';
 
 class SearchProvider extends ChangeNotifier {
-  // late SearchRestaurant _searchRestaurant;
-
-  // ResultState _state = ResultState.loading;
-  late ResultState _state;
+  ResultState _state = ResultState.loading;
   String _message = '';
 
   List<RestaurantsShort> _searchList = [];
 
   String get message => _message;
-  // SearchRestaurant get searchRestaurants => _searchRestaurant;
   List<RestaurantsShort> get searchList => _searchList;
   ResultState get state => _state;
 
   Future<dynamic> searchRestaurant({required String query}) async {
     try {
-      // if (_state != ResultState.loading) {
-      _state = ResultState.loading;
-      _message = 'Memuat pencarian data';
-      notifyListeners();
-      // }
+      if (_state != ResultState.loading) {
+        _state = ResultState.loading;
+        _message = 'Memuat pencarian data';
+        notifyListeners();
+      }
 
       _searchList.clear();
 

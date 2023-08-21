@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:submission_resto/common/const_api.dart';
+import 'package:submission_resto/common/funs/get_color_scheme.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 import 'package:submission_resto/provider/search_provider.dart';
 import 'package:submission_resto/ui/resto_page.dart';
@@ -39,7 +40,11 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     );
   }
 
-  Future<Iterable<Widget>> getResult(SearchController controller) async {
+  Future<Iterable<Widget>> getResult(
+      SearchController controller, BuildContext context) async {
+    ColorScheme colorScheme = getCurrentColorScheme(context);
+    final textTheme = Theme.of(context).textTheme;
+
     final String input = controller.value.text;
 
     String message = '';
@@ -53,19 +58,51 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       message = searchProvider.message;
     }
 
-    return suggestResult.length >= 1
-        ? getSuggestions(suggestResult, controller)
-        : <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height * 0.75,
-              child: Center(
-                child: Text(
+    if (searchProvider.state == ResultState.loading) {
+      print('isLoading');
+      return <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircularProgressIndicator(),
+                Text(
                   message,
                   style: TextStyle(color: Colors.grey),
                 ),
-              ),
+              ],
             ),
-          ];
+          ),
+        ),
+      ];
+    } else if (searchProvider.state == ResultState.hasData) {
+      print('hasData');
+      return getSuggestions(suggestResult, controller);
+    } else {
+      print('isError');
+      return <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height * 0.75,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                (searchProvider.state == ResultState.networkError)
+                    ? Icon(Icons.network_check)
+                    : Icon(Icons.warning),
+                Text(
+                  message,
+                  style: textTheme.titleMedium
+                      ?.copyWith(color: colorScheme.primary),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ];
+    }
   }
 
   Iterable<Widget> getSuggestions(
@@ -119,6 +156,9 @@ class _SearchAnchorsState extends State<SearchAnchors> {
 
   @override
   Widget build(BuildContext context) {
+    ColorScheme colorScheme = getCurrentColorScheme(context);
+    final textTheme = Theme.of(context).textTheme;
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: SearchAnchor.bar(
@@ -131,16 +171,23 @@ class _SearchAnchorsState extends State<SearchAnchors> {
             return <Widget>[
               Container(
                 height: MediaQuery.of(context).size.height * 0.75,
-                child: const Center(
-                  child: Text(
-                    'Tidak ada riwayat pencarian',
-                    style: TextStyle(color: Colors.grey),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.find_in_page_rounded),
+                      Text(
+                        'Tidak ada riwayat pencarian.',
+                        style: textTheme.titleMedium
+                            ?.copyWith(color: colorScheme.primary),
+                      ),
+                    ],
                   ),
                 ),
               )
             ];
           }
-          return getResult(controller);
+          return getResult(controller, context);
         },
       ),
     );
