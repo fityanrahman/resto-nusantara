@@ -115,13 +115,11 @@ class _RestaurantPageState extends State<RestaurantPage> {
                         textTheme,
                         state.orderFood,
                         'Makanan',
-                        true,
                       ),
                       _itemRestoWidget(
                         textTheme,
                         state.orderDrink,
                         'Minuman',
-                        false,
                       ),
                       _itemReviewResto(
                         textTheme,
@@ -306,8 +304,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     );
   }
 
-  Widget _itemRestoWidget(
-      TextTheme textTheme, List<Order> food, String type, bool isFood) {
+  Widget _itemRestoWidget(TextTheme textTheme, List<Order> food, String type) {
     final order = Provider.of<OrderProvider>(context, listen: false);
 
     return Padding(

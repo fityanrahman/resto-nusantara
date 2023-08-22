@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
+import 'package:submission_resto/provider/order_provider.dart';
 
-class ItemRestoWidget extends StatefulWidget {
+class ItemRestoWidget extends StatelessWidget {
   final TextTheme textTheme;
   final Order order;
   final Function tambahTransaksi;
@@ -14,12 +16,6 @@ class ItemRestoWidget extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  @override
-  State<ItemRestoWidget> createState() => _ItemRestoWidgetState();
-}
-
-class _ItemRestoWidgetState extends State<ItemRestoWidget> {
-  @override
   Widget build(BuildContext context) {
     ColorScheme colorScheme = getCurrentColorScheme(context);
 
@@ -45,80 +41,76 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
   }
 
   Widget _itemQtyFav() {
-    return Padding(
-      padding: EdgeInsets.only(left: widget.order.qty == 0 ? 16 : 0, right: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          widget.order.qty == 0
-              ? ElevatedButton(
-                  onPressed: () {
-                    widget.order.qty++;
-                    widget.tambahTransaksi(widget.order);
-                  },
-                  child: Text(
-                    'Tambah',
-                    style: widget.textTheme.labelSmall,
+    return Consumer<OrderProvider>(builder: (context, state, _) {
+      return Padding(
+        padding: EdgeInsets.only(left: order.qty == 0 ? 16 : 0, right: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            order.qty == 0
+                ? ElevatedButton(
+                    onPressed: () {
+                      order.qty++;
+                      state.tambahTransaksi(order);
+                    },
+                    child: Text(
+                      'Tambah',
+                      style: textTheme.labelSmall,
+                    ),
+                  )
+                : Row(
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          minimumSize: Size.zero,
+                          fixedSize: const Size(24, 24),
+                          padding: EdgeInsets.zero,
+                        ),
+                        onPressed: () {
+                          order.qty--;
+                          state.tambahTransaksi(order);
+                        },
+                        child: const Icon(
+                          Icons.remove,
+                          size: 16,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: Text(order.qty.toString()),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          minimumSize: Size.zero,
+                          fixedSize: const Size(24, 24),
+                          padding: EdgeInsets.zero,
+                        ),
+                        onPressed: () {
+                          order.qty++;
+                          state.tambahTransaksi(order);
+                        },
+                        child: const Icon(
+                          Icons.add,
+                          size: 16,
+                        ),
+                      ),
+                    ],
                   ),
-                )
-              : Row(
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        minimumSize: Size.zero,
-                        fixedSize: const Size(24, 24),
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          widget.order.qty--;
-                          widget.tambahTransaksi(widget.order);
-                        });
-                      },
-                      child: const Icon(
-                        Icons.remove,
-                        size: 16,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Text(widget.order.qty.toString()),
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        minimumSize: Size.zero,
-                        fixedSize: const Size(24, 24),
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          widget.order.qty++;
-                          widget.tambahTransaksi(widget.order);
-                        });
-                      },
-                      child: const Icon(
-                        Icons.add,
-                        size: 16,
-                      ),
-                    ),
-                  ],
-                ),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                widget.order.fav = !widget.order.fav;
-              });
-            },
-            icon: Icon(
-              widget.order.fav ? Icons.star : Icons.star_outline,
-              color: Colors.orangeAccent,
-            ),
-          )
-        ],
-      ),
-    );
+            IconButton(
+              onPressed: () {
+                order.fav = !order.fav;
+              },
+              icon: Icon(
+                order.fav ? Icons.star : Icons.star_outline,
+                color: Colors.orangeAccent,
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 
   Widget _itemMenu(ColorScheme colorScheme) {
@@ -131,7 +123,7 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
           aspectRatio: 1.6,
           child: Container(
             color: colorScheme.secondary,
-            child: widget.order.food
+            child: order.food
                 ? Icon(
                     Icons.fastfood_rounded,
                     color: colorScheme.onSecondary,
@@ -144,11 +136,11 @@ class _ItemRestoWidgetState extends State<ItemRestoWidget> {
         ),
       ),
       title: Text(
-        widget.order.name,
+        order.name,
         style: TextStyle(fontWeight: FontWeight.w500),
       ),
       subtitle: Text(
-        'Rp ${widget.order.price.toString()}',
+        'Rp ${order.price.toString()}',
       ),
     );
   }
