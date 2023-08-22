@@ -18,40 +18,42 @@ class OrderDialog extends StatelessWidget {
     return AlertDialog(
       icon: const Icon(Icons.check_circle),
       title: const Center(child: Text('Order Berhasil')),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'Pesanan akan segera dikirim ke alamat anda oleh driver. Review resto ini juga yuk!',
-          ),
-          TextField(
-            autofocus: true,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-              hintText: 'Nama',
-              labelText: 'Nama',
+      content: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Pesanan akan segera dikirim ke alamat anda oleh driver. Review resto ini juga yuk!',
             ),
-            onChanged: (String value) {
-              _nama = value;
-            },
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          TextField(
-            autofocus: true,
-            textInputAction: TextInputAction.next,
-            minLines: 1,
-            maxLines: 3,
-            decoration: const InputDecoration(
-              hintText: 'Bisa sih ga review juga. Tapi, yakali ga review :(',
-              labelText: 'Review',
+            TextField(
+              autofocus: true,
+              textInputAction: TextInputAction.next,
+              decoration: const InputDecoration(
+                hintText: 'Nama',
+                labelText: 'Nama',
+              ),
+              onChanged: (String value) {
+                _nama = value;
+              },
             ),
-            onChanged: (String value) {
-              _review = value;
-            },
-          ),
-        ],
+            SizedBox(
+              height: 4,
+            ),
+            TextField(
+              autofocus: true,
+              textInputAction: TextInputAction.next,
+              maxLines: 2,
+              decoration: const InputDecoration(
+                hintText: 'Bisa sih ga review juga. Tapi, yakali ga review :(',
+                labelText: 'Review',
+              ),
+              onChanged: (String value) {
+                _review = value;
+              },
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
