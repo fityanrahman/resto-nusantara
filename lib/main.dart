@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:submission_resto/common/style.dart';
 import 'package:submission_resto/data/api/api_service.dart';
-import 'package:submission_resto/data/model/transaction/order_model.dart';
+import 'package:submission_resto/data/model/arguments/restoArguments.dart';
 import 'package:submission_resto/provider/cart_provider.dart';
 import 'package:submission_resto/provider/home_provider.dart';
 import 'package:submission_resto/provider/order_provider.dart';
@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
                 idResto: ModalRoute.of(context)?.settings.arguments as String,
               ),
           CartPage.routeName: (context) => CartPage(
-                orders:
-                    ModalRoute.of(context)?.settings.arguments as List<Order>,
+                args: ModalRoute.of(context)?.settings.arguments
+                    as RestoArguments,
               ),
         },
       ),

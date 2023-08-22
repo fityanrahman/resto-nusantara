@@ -61,13 +61,13 @@ class _HomePageState extends State<HomePage> {
 
             //get distinct cities list
             cities = generateDistinctCities(restaurants);
-          } else if (state.state == ResultState.noData) {
+          } else if (state.state == ResultState.networkError) {
             return Center(
               child: Material(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.warning),
+                    Icon(Icons.network_check),
                     Text(state.message),
                     TextButton(
                       onPressed: () async {
@@ -80,19 +80,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             );
-          } else if (state.state == ResultState.error) {
-            return Center(
-              child: Material(
-                child: Text(state.message),
-              ),
-            );
           } else {
             return Center(
               child: Material(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.network_check),
+                    Icon(Icons.warning),
                     Text(state.message),
                     TextButton(
                       onPressed: () async {

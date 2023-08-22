@@ -3,7 +3,7 @@ import 'package:submission_resto/data/model/restaurant/customer_review_model.dar
 class AddReview {
   bool error;
   String message;
-  CustomerReview customerReviews;
+  List<CustomerReview> customerReviews;
 
   AddReview({
     required this.error,
@@ -14,6 +14,7 @@ class AddReview {
   factory AddReview.fromJson(Map<String, dynamic> json) => AddReview(
         error: json["error"],
         message: json["message"],
-        customerReviews: CustomerReview.fromJson(json["customerReviews"]),
+        customerReviews: List<CustomerReview>.from(
+            json["customerReviews"].map((x) => CustomerReview.fromJson(x))),
       );
 }

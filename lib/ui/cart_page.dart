@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:submission_resto/data/model/arguments/restoArguments.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/provider/cart_provider.dart';
-import 'package:submission_resto/ui/home_page.dart';
 import 'package:submission_resto/widget/item_cart_widget.dart';
+import 'package:submission_resto/widget/order_dialog.dart';
 
 class CartPage extends StatefulWidget {
   static const routeName = '/cart-page';
 
-  final List<Order> orders;
+  final RestoArguments args;
 
-  const CartPage({required this.orders, Key? key}) : super(key: key);
+  const CartPage({required this.args, Key? key}) : super(key: key);
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -22,7 +23,7 @@ class _CartPageState extends State<CartPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<CartProvider>(context, listen: false)
-          .hitungPesanan(widget.orders);
+          .hitungPesanan(widget.args.order);
     });
   }
 
@@ -40,7 +41,7 @@ class _CartPageState extends State<CartPage> {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              _itemCartWidget(textTheme, widget.orders),
+              _itemCartWidget(textTheme, widget.args.order),
               _opsiPengiriman(textTheme),
               _ringkasanBayar(textTheme),
             ],
@@ -61,7 +62,8 @@ class _CartPageState extends State<CartPage> {
         onPressed: () {
           showDialog(
               context: context,
-              builder: (BuildContext context) => _dialogOrder());
+              builder: (BuildContext context) =>
+                  OrderDialog(idResto: widget.args.idResto));
         },
         icon: const Icon(Icons.monetization_on),
         label: const Text('Bayar Pesanan'),
@@ -148,7 +150,7 @@ class _CartPageState extends State<CartPage> {
               onTap: () {
                 state.isOngkirReg = true;
                 state.ongkir = state.ongkirReg;
-                state.hitungPesanan(widget.orders);
+                state.hitungPesanan(widget.args.order);
               },
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
@@ -167,7 +169,7 @@ class _CartPageState extends State<CartPage> {
                       onChanged: (bool? value) {
                         state.isOngkirReg = value!;
                         state.ongkir = state.ongkirReg;
-                        state.hitungPesanan(widget.orders);
+                        state.hitungPesanan(widget.args.order);
                       },
                     ),
                   ),
@@ -183,7 +185,7 @@ class _CartPageState extends State<CartPage> {
               onTap: () {
                 state.isOngkirReg = false;
                 state.ongkir = state.ongkirHemat;
-                state.hitungPesanan(widget.orders);
+                state.hitungPesanan(widget.args.order);
               },
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
@@ -202,7 +204,7 @@ class _CartPageState extends State<CartPage> {
                       onChanged: (bool? value) {
                         state.isOngkirReg = value!;
                         state.ongkir = state.ongkirHemat;
-                        state.hitungPesanan(widget.orders);
+                        state.hitungPesanan(widget.args.order);
                       },
                     ),
                   ),
@@ -235,23 +237,6 @@ class _CartPageState extends State<CartPage> {
             );
           },
         ),
-      ],
-    );
-  }
-
-  Widget _dialogOrder() {
-    return AlertDialog(
-      icon: const Icon(Icons.check_circle),
-      title: const Center(child: Text('Order Berhasil')),
-      content: const Text(
-          'Pesanan akan segera diproses oleh restoran, dan akan segera dikirim ke alamat anda oleh driver. '),
-      actions: [
-        TextButton(
-            onPressed: () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
-            },
-            child: const Text('OK')),
       ],
     );
   }

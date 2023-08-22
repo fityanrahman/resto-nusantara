@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shadow_overlay/shadow_overlay.dart';
 import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
+import 'package:submission_resto/data/model/arguments/restoArguments.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/provider/order_provider.dart';
 import 'package:submission_resto/ui/cart_page.dart';
@@ -184,7 +185,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     Navigator.pushNamed(
                       context,
                       CartPage.routeName,
-                      arguments: order.distinct,
+                      arguments: RestoArguments(widget.idResto, order.distinct),
                     );
                   },
                   restoName: order.restaurantDetail.restaurant.name,
