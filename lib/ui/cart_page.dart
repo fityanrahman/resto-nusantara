@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
+import 'package:submission_resto/provider/cart_provider.dart';
 import 'package:submission_resto/ui/home_page.dart';
 import 'package:submission_resto/widget/item_cart_widget.dart';
 
@@ -15,17 +17,18 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  bool regular = true;
-  int harga = 0;
-  int ongkir = 12000;
-  int biayaLayanan = 4000;
-  int totalPesanan = 0;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<CartProvider>(context, listen: false)
+          .hitungPesanan(widget.orders);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-
-    hitungPesanan();
 
     return Scaffold(
       extendBody: true,
@@ -67,153 +70,154 @@ class _CartPageState extends State<CartPage> {
   }
 
   Widget _ringkasanBayar(TextTheme textTheme) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 28.0, bottom: 80),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Ringkasan Pembayaran',
-            style: textTheme.titleMedium,
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -4),
-            contentPadding: EdgeInsets.zero,
-            minLeadingWidth: 0,
-            title: const Text('Harga'),
-            trailing: Text(
-              'Rp $harga',
-              style: textTheme.bodyLarge,
+    return Consumer<CartProvider>(builder: (context, state, _) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 28.0, bottom: 80),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Ringkasan Pembayaran',
+              style: textTheme.titleMedium,
             ),
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -4),
-            contentPadding: EdgeInsets.zero,
-            minLeadingWidth: 0,
-            title: const Text('Ongkir'),
-            trailing: Text(
-              'Rp $ongkir',
-              style: textTheme.bodyLarge,
+            const SizedBox(
+              height: 12,
             ),
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -4),
-            contentPadding: EdgeInsets.zero,
-            minLeadingWidth: 0,
-            title: const Text('Biaya Layanan'),
-            trailing: Text(
-              'Rp $biayaLayanan',
-              style: textTheme.bodyLarge,
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -4),
+              contentPadding: EdgeInsets.zero,
+              minLeadingWidth: 0,
+              title: const Text('Harga'),
+              trailing: Text(
+                'Rp ${state.harga}',
+                style: textTheme.bodyLarge,
+              ),
             ),
-          ),
-          ListTile(
-            visualDensity: const VisualDensity(vertical: -4),
-            contentPadding: EdgeInsets.zero,
-            minLeadingWidth: 0,
-            title: const Text('Total'),
-            trailing: Text(
-              'Rp $totalPesanan',
-              style: textTheme.bodyLarge,
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -4),
+              contentPadding: EdgeInsets.zero,
+              minLeadingWidth: 0,
+              title: const Text('Ongkir'),
+              trailing: Text(
+                'Rp ${state.ongkir}',
+                style: textTheme.bodyLarge,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -4),
+              contentPadding: EdgeInsets.zero,
+              minLeadingWidth: 0,
+              title: const Text('Biaya Layanan'),
+              trailing: Text(
+                'Rp ${state.biayaLayanan}',
+                style: textTheme.bodyLarge,
+              ),
+            ),
+            ListTile(
+              visualDensity: const VisualDensity(vertical: -4),
+              contentPadding: EdgeInsets.zero,
+              minLeadingWidth: 0,
+              title: const Text('Total'),
+              trailing: Text(
+                // 'Rp ${state.hitungPesanan(widget.orders)}',
+                'Rp ${state.totalPesanan}',
+                style: textTheme.bodyLarge,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _opsiPengiriman(TextTheme textTheme) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 28.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Opsi Pengiriman',
-            style: textTheme.titleMedium,
-          ),
-          const SizedBox(
-            height: 12,
-          ),
-          InkWell(
-            onTap: () {
-              setState(() {
-                regular = true;
-                ongkir = 12000;
-              });
-            },
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            child: ListTile(
-              visualDensity: const VisualDensity(vertical: -4),
-              contentPadding: EdgeInsets.zero,
-              minLeadingWidth: 0,
-              leading: SizedBox(
-                height: 16,
-                width: 16,
-                child: Transform.scale(
-                  scale: 0.8,
-                  child: Radio(
-                    value: true,
-                    groupValue: regular,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        regular = value!;
-                        ongkir = 12000;
-                      });
-                    },
+    return Consumer<CartProvider>(builder: (context, state, _) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 28.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Opsi Pengiriman',
+              style: textTheme.titleMedium,
+            ),
+            const SizedBox(
+              height: 12,
+            ),
+            InkWell(
+              onTap: () {
+                state.isOngkirReg = true;
+                state.ongkir = state.ongkirReg;
+                state.hitungPesanan(widget.orders);
+              },
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              child: ListTile(
+                visualDensity: const VisualDensity(vertical: -4),
+                contentPadding: EdgeInsets.zero,
+                minLeadingWidth: 0,
+                leading: SizedBox(
+                  height: 16,
+                  width: 16,
+                  child: Transform.scale(
+                    scale: 0.8,
+                    child: Radio(
+                      value: true,
+                      groupValue: state.isOngkirReg,
+                      onChanged: (bool? value) {
+                        state.isOngkirReg = value!;
+                        state.ongkir = state.ongkirReg;
+                        state.hitungPesanan(widget.orders);
+                      },
+                    ),
                   ),
                 ),
-              ),
-              title: const Text('Reguler'),
-              trailing: Text(
-                'Rp 12.000',
-                style: textTheme.bodyLarge,
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () {
-              setState(() {
-                regular = false;
-                ongkir = 5000;
-              });
-            },
-            splashColor: Colors.transparent,
-            highlightColor: Colors.transparent,
-            child: ListTile(
-              visualDensity: const VisualDensity(vertical: -4),
-              contentPadding: EdgeInsets.zero,
-              minLeadingWidth: 0,
-              leading: SizedBox(
-                height: 16,
-                width: 16,
-                child: Transform.scale(
-                  scale: 0.8,
-                  child: Radio(
-                    value: false,
-                    groupValue: regular,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        regular = value!;
-                        ongkir = 5000;
-                      });
-                    },
-                  ),
+                title: const Text('Reguler'),
+                trailing: Text(
+                  'Rp 12.000',
+                  style: textTheme.bodyLarge,
                 ),
               ),
-              title: const Text('Hemat'),
-              trailing: Text(
-                'Rp 5.000',
-                style: textTheme.bodyLarge,
+            ),
+            InkWell(
+              onTap: () {
+                state.isOngkirReg = false;
+                state.ongkir = state.ongkirHemat;
+                state.hitungPesanan(widget.orders);
+              },
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              child: ListTile(
+                visualDensity: const VisualDensity(vertical: -4),
+                contentPadding: EdgeInsets.zero,
+                minLeadingWidth: 0,
+                leading: SizedBox(
+                  height: 16,
+                  width: 16,
+                  child: Transform.scale(
+                    scale: 0.8,
+                    child: Radio(
+                      value: false,
+                      groupValue: state.isOngkirReg,
+                      onChanged: (bool? value) {
+                        state.isOngkirReg = value!;
+                        state.ongkir = state.ongkirHemat;
+                        state.hitungPesanan(widget.orders);
+                      },
+                    ),
+                  ),
+                ),
+                title: const Text('Hemat'),
+                trailing: Text(
+                  'Rp 5.000',
+                  style: textTheme.bodyLarge,
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
   Widget _itemCartWidget(TextTheme textTheme, List<Order> order) {
@@ -250,11 +254,5 @@ class _CartPageState extends State<CartPage> {
             child: const Text('OK')),
       ],
     );
-  }
-
-  void hitungPesanan() {
-    harga = widget.orders.fold(0, (sum, item) => sum + item.price * item.qty);
-    
-    totalPesanan = harga + ongkir + biayaLayanan;
   }
 }
