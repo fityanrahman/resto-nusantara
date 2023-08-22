@@ -27,6 +27,20 @@ class OrderDialog extends StatelessWidget {
           TextField(
             autofocus: true,
             textInputAction: TextInputAction.next,
+            decoration: const InputDecoration(
+              hintText: 'Nama',
+              labelText: 'Nama',
+            ),
+            onChanged: (String value) {
+              _nama = value;
+            },
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          TextField(
+            autofocus: true,
+            textInputAction: TextInputAction.next,
             minLines: 1,
             maxLines: 3,
             decoration: const InputDecoration(
@@ -35,17 +49,6 @@ class OrderDialog extends StatelessWidget {
             ),
             onChanged: (String value) {
               _review = value;
-            },
-          ),
-          TextField(
-            autofocus: true,
-            textInputAction: TextInputAction.next,
-            decoration: const InputDecoration(
-              hintText: 'Nama',
-              labelText: 'Nama',
-            ),
-            onChanged: (String value) {
-              _nama = value;
             },
           ),
         ],

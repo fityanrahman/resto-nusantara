@@ -63,10 +63,8 @@ class OrderProvider extends ChangeNotifier {
 
   Future<dynamic> fetchDetailRestaurant({required String id}) async {
     try {
-      if (_state != ResultState.loading) {
-        _state = ResultState.loading;
-        notifyListeners();
-      }
+      _state = ResultState.loading;
+      notifyListeners();
 
       _clearOrderDatas();
 

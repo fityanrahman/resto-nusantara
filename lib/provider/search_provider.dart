@@ -20,11 +20,9 @@ class SearchProvider extends ChangeNotifier {
 
   Future<dynamic> searchRestaurant({required String query}) async {
     try {
-      if (_state != ResultState.loading) {
-        _state = ResultState.loading;
-        _message = 'Memuat pencarian data';
-        notifyListeners();
-      }
+      _state = ResultState.loading;
+      _message = 'Memuat pencarian data';
+      notifyListeners();
 
       _searchList.clear();
 

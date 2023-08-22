@@ -5,11 +5,13 @@ import 'package:shadow_overlay/shadow_overlay.dart';
 import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
 import 'package:submission_resto/data/model/arguments/restoArguments.dart';
+import 'package:submission_resto/data/model/restaurant/restaurant_detail_model.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/provider/order_provider.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/widget/add_to_cart_button.dart';
 import 'package:submission_resto/widget/item_resto_widget.dart';
+import 'package:submission_resto/widget/review_widget.dart';
 
 class RestaurantPage extends StatefulWidget {
   static const routeName = '/resto-page';
@@ -25,8 +27,10 @@ class _RestaurantPageState extends State<RestaurantPage> {
   @override
   void initState() {
     super.initState();
-    final dataProvider = Provider.of<OrderProvider>(context, listen: false);
-    dataProvider.fetchDetailRestaurant(id: widget.idResto);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final dataProvider = Provider.of<OrderProvider>(context, listen: false);
+      dataProvider.fetchDetailRestaurant(id: widget.idResto);
+    });
   }
 
   @override
@@ -119,6 +123,10 @@ class _RestaurantPageState extends State<RestaurantPage> {
                         'Minuman',
                         false,
                       ),
+                      _itemReviewResto(
+                        textTheme,
+                        state.restaurantDetail.restaurant.customerReviews,
+                      )
                     ],
                   ),
                 ),
@@ -196,6 +204,44 @@ class _RestaurantPageState extends State<RestaurantPage> {
             )
           : SizedBox();
     });
+  }
+
+  Widget _itemReviewResto(
+      TextTheme textTheme, List<CustomerReview> customerReviews) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 28.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Ulasan pelanggan',
+            style: textTheme.titleMedium,
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          customerReviews.length >= 1
+              ? ListView.builder(
+                  padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: customerReviews.length,
+                  itemBuilder: (context, index) {
+                    return UserReview(
+                      textTheme: textTheme,
+                      customerReview: customerReviews[index],
+                    );
+                  },
+                )
+              : Center(
+                  child: Text(
+                    'Restoran ini belum memiliki ulasan',
+                    style: textTheme.titleMedium,
+                  ),
+                )
+        ],
+      ),
+    );
   }
 
   Widget _detailResto(TextTheme textTheme, String description) {
@@ -277,7 +323,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
             height: 8,
           ),
           ListView.builder(
-            padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+            padding: EdgeInsets.only(bottom: 16.0),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: food.length,
