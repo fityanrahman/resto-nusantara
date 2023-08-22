@@ -65,9 +65,7 @@ class OrderDialog extends StatelessWidget {
               print('ini isi review: $_review');
               showDialog(
                   context: context,
-                  builder: (BuildContext context) =>
-                      // _dialogReview(review: _review, nama: _nama));
-                      ChangeNotifierProvider(
+                  builder: (BuildContext context) => ChangeNotifierProvider(
                         create: (_) => ReviewProvider(
                             apiService: ApiService(),
                             nama: _nama,

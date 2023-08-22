@@ -71,7 +71,6 @@ class _HomePageState extends State<HomePage> {
                     Text(state.message),
                     TextButton(
                       onPressed: () async {
-                        // state.fetchDetailRestaurant(id: widget.idResto);
                         state.fetchAllRestaurant();
                       },
                       child: Text('Refresh'),
@@ -90,7 +89,6 @@ class _HomePageState extends State<HomePage> {
                     Text(state.message),
                     TextButton(
                       onPressed: () async {
-                        // state.fetchDetailRestaurant(id: widget.idResto);
                         state.fetchAllRestaurant();
                       },
                       child: Text('Refresh'),
@@ -104,9 +102,7 @@ class _HomePageState extends State<HomePage> {
 
         return ListView(
           children: [
-            SearchAnchors(
-                // restaurants: restaurants
-                ),
+            SearchAnchors(),
             _listKota(cities, textTheme, homeProvider),
             _listFavResto(cityRestaurants, textTheme),
             _listRestoNusa(restaurants, textTheme)

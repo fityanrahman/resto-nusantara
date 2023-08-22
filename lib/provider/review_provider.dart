@@ -46,7 +46,6 @@ class ReviewProvider extends ChangeNotifier {
 
       final AddReview addReview =
           await ApiService().postReview(id: id, nama: nama, review: review);
-      print('isErrorReview : ${addReview.error}');
       if (addReview.error) {
         _state = ResultState.noData;
         notifyListeners();

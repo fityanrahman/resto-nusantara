@@ -121,7 +121,6 @@ class _CartPageState extends State<CartPage> {
               minLeadingWidth: 0,
               title: const Text('Total'),
               trailing: Text(
-                // 'Rp ${state.hitungPesanan(widget.orders)}',
                 'Rp ${state.totalPesanan}',
                 style: textTheme.bodyLarge,
               ),
