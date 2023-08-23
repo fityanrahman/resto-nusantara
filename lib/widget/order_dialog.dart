@@ -59,12 +59,9 @@ class OrderDialog extends StatelessWidget {
         TextButton(
           onPressed: () {
             if (_review.isEmpty) {
-              print('review kosong');
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const HomePage()));
-              print('ini isi review: $_review');
             } else {
-              print('ini isi review: $_review');
               showDialog(
                   context: context,
                   builder: (BuildContext context) => ChangeNotifierProvider(
@@ -85,7 +82,6 @@ class OrderDialog extends StatelessWidget {
 
   Widget _dialogReview() {
     return Consumer<ReviewProvider>(builder: (contextReview, state, _) {
-      print('stateTerkini : ${state.state}');
       if (state.state == ResultState.loading) {
         return AlertDialog(
           content: Column(

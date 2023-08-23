@@ -9,14 +9,21 @@ import 'package:submission_resto/data/model/restaurant/restaurant_short_model.da
 import 'package:submission_resto/data/model/restaurant/search_restaurant_model.dart';
 
 class SearchProvider extends ChangeNotifier {
-  ResultState _state = ResultState.loading;
+  late ResultState _state;
   String _message = '';
 
   List<RestaurantsShort> _searchList = [];
+  List<RestaurantsShort> _searchHistory = [];
 
   String get message => _message;
   List<RestaurantsShort> get searchList => _searchList;
+  List<RestaurantsShort> get searchHistory => _searchHistory;
+
   ResultState get state => _state;
+  set searchHistory(List<RestaurantsShort> searchHistory) {
+    _searchHistory = searchHistory;
+    notifyListeners();
+  }
 
   Future<dynamic> searchRestaurant({required String query}) async {
     try {

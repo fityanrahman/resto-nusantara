@@ -4,8 +4,11 @@ class CustomException implements Exception {
   final String message;
   final ResultState state;
 
+  // Pass your message in constructor.
   CustomException(
-      this.message, this.state); // Pass your message in constructor.
+    this.message,
+    this.state,
+  );
 
   @override
   String toString() {

@@ -214,9 +214,7 @@ class _HomePageState extends State<HomePage> {
             ),
             child: InkWell(
               onTap: () {
-                setState(() {
-                  homeProvider.city = cities[index];
-                });
+                homeProvider.city = cities[index];
               },
               child: CircleKotaWidget(
                 city: cities[index],

@@ -17,9 +17,9 @@ class SearchAnchors extends StatefulWidget {
 
 class _SearchAnchorsState extends State<SearchAnchors> {
   String? selectedResto;
-  List<RestaurantsShort> searchHistory = <RestaurantsShort>[];
 
-  Iterable<Widget> getHistoryList(SearchController controller) {
+  Iterable<Widget> getHistoryList(SearchController controller,
+      List<RestaurantsShort> searchHistory, BuildContext context) {
     return searchHistory.map(
       (resto) => ListTile(
         leading: const Icon(Icons.history),
@@ -50,7 +50,8 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     String message = '';
     List<RestaurantsShort> suggestResult = [];
 
-    final searchProvider = Provider.of<SearchProvider>(context, listen: false);
+    final searchProvider =
+        await Provider.of<SearchProvider>(context, listen: false);
 
     try {
       suggestResult = await searchProvider.searchRestaurant(query: input);
@@ -59,7 +60,6 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     }
 
     if (searchProvider.state == ResultState.loading) {
-      print('isLoading');
       return <Widget>[
         Container(
           height: MediaQuery.of(context).size.height * 0.75,
@@ -78,10 +78,8 @@ class _SearchAnchorsState extends State<SearchAnchors> {
         ),
       ];
     } else if (searchProvider.state == ResultState.hasData) {
-      print('hasData');
       return getSuggestions(suggestResult, controller);
     } else {
-      print('isError');
       return <Widget>[
         Container(
           height: MediaQuery.of(context).size.height * 0.75,
@@ -144,13 +142,12 @@ class _SearchAnchorsState extends State<SearchAnchors> {
   }
 
   void handleSelection(RestaurantsShort resto) {
-    setState(() {
-      selectedResto = resto.name;
-      if (searchHistory.length >= 5) {
-        searchHistory.removeLast();
-      }
-      searchHistory.insert(0, resto);
-    });
+    final provider = Provider.of<SearchProvider>(context, listen: false);
+    selectedResto = resto.name;
+    if (provider.searchHistory.length >= 5) {
+      provider.searchHistory.removeLast();
+    }
+    provider.searchHistory.insert(0, resto);
     Navigator.pushNamed(context, RestaurantPage.routeName, arguments: resto.id);
   }
 
@@ -159,37 +156,39 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     ColorScheme colorScheme = getCurrentColorScheme(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SearchAnchor.bar(
-        barHintText: 'Cari Restoran',
-        suggestionsBuilder: (context, controller) {
-          if (controller.text.isEmpty) {
-            if (searchHistory.isNotEmpty) {
-              return getHistoryList(controller);
-            }
-            return <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.height * 0.75,
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.find_in_page_rounded),
-                      Text(
-                        'Tidak ada riwayat pencarian.',
-                        style: textTheme.titleMedium
-                            ?.copyWith(color: colorScheme.primary),
-                      ),
-                    ],
+    return Consumer<SearchProvider>(builder: (context, state, _) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: SearchAnchor.bar(
+          barHintText: 'Cari Restoran',
+          suggestionsBuilder: (context, controller) {
+            if (controller.text.isEmpty) {
+              if (state.searchHistory.isNotEmpty) {
+                return getHistoryList(controller, state.searchHistory, context);
+              }
+              return <Widget>[
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.75,
+                  child: Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.find_in_page_rounded),
+                        Text(
+                          'Tidak ada riwayat pencarian.',
+                          style: textTheme.titleMedium
+                              ?.copyWith(color: colorScheme.primary),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              )
-            ];
-          }
-          return getResult(controller, context);
-        },
-      ),
-    );
+                )
+              ];
+            }
+            return getResult(controller, context);
+          },
+        ),
+      );
+    });
   }
 }
