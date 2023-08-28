@@ -19,6 +19,7 @@ class HomeProvider extends ChangeNotifier {
   late ResultState _state;
   String _message = '';
   String _city = 'Nusantara';
+  bool _isExtendedFAB = true;
 
   List<RestaurantsShort> get restaurants => _restaurants;
 
@@ -29,13 +30,18 @@ class HomeProvider extends ChangeNotifier {
   String get message => _message;
 
   String get city => _city;
-
   set city(String city) {
     if (city == 'Semua') {
       _city = 'Nusantara';
     } else {
       _city = city;
     }
+    notifyListeners();
+  }
+
+  bool get isExtendedFAB => _isExtendedFAB;
+  set isExtendedFAB(bool isExtendedFAB) {
+    _isExtendedFAB = isExtendedFAB;
     notifyListeners();
   }
 

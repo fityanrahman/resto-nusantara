@@ -20,10 +20,70 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    final homeProvider = Provider.of<HomeProvider>(context, listen: false);
+
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.offset > 50) {
+        homeProvider.isExtendedFAB = false;
+      } else {
+        homeProvider.isExtendedFAB = true;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildListRestoFav(context),
+      floatingActionButton: _favRestoFAB(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Widget _favRestoFAB() {
+    return Consumer<HomeProvider>(
+      builder: (context, state, _) {
+        return state.isExtendedFAB
+            ? AnimatedSwitcher(
+                duration: Duration(milliseconds: 250),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return AnimatedContainer(
+                      curve: Curves.linear,
+                      duration: Duration(milliseconds: 250),
+                      child: child);
+                },
+                child: FloatingActionButton.extended(
+                  onPressed: () {},
+                  key: ValueKey<bool>(state.isExtendedFAB),
+                  icon: const Icon(Icons.star),
+                  label: const Text('Bookmark'),
+                ),
+              )
+            : AnimatedSwitcher(
+                duration: Duration(milliseconds: 250),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return AnimatedContainer(
+                      curve: Curves.linear,
+                      duration: Duration(milliseconds: 250),
+                      child: child);
+                },
+                child: FloatingActionButton(
+                  onPressed: () {},
+                  key: ValueKey<bool>(state.isExtendedFAB),
+                  child: const Icon(Icons.star),
+                ),
+              );
+      },
     );
   }
 
@@ -101,6 +161,7 @@ class _HomePageState extends State<HomePage> {
         }
 
         return ListView(
+          controller: _scrollController,
           children: [
             SearchAnchors(),
             _listKota(cities, textTheme, homeProvider),
