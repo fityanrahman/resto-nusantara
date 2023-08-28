@@ -31,7 +31,7 @@ class AddToCartButton extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('${itemCount} item'),
+                Text('$itemCount item'),
                 Text(restoName),
               ],
             ),

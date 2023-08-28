@@ -12,8 +12,8 @@ class OrderDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _review = '';
-    String _nama = '';
+    String review = '';
+    String nama = '';
 
     return AlertDialog(
       icon: const Icon(Icons.check_circle),
@@ -34,7 +34,7 @@ class OrderDialog extends StatelessWidget {
                 labelText: 'Nama',
               ),
               onChanged: (String value) {
-                _nama = value;
+                nama = value;
               },
             ),
             SizedBox(
@@ -49,7 +49,7 @@ class OrderDialog extends StatelessWidget {
                 labelText: 'Review',
               ),
               onChanged: (String value) {
-                _review = value;
+                review = value;
               },
             ),
           ],
@@ -58,7 +58,7 @@ class OrderDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            if (_review.isEmpty) {
+            if (review.isEmpty) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => const HomePage()));
             } else {
@@ -67,8 +67,8 @@ class OrderDialog extends StatelessWidget {
                   builder: (BuildContext context) => ChangeNotifierProvider(
                         create: (_) => ReviewProvider(
                             apiService: ApiService(),
-                            nama: _nama,
-                            review: _review,
+                            nama: nama,
+                            review: review,
                             id: idResto),
                         child: _dialogReview(),
                       ));

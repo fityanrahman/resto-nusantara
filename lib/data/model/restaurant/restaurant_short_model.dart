@@ -26,12 +26,12 @@ class RestaurantsShort {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['pictureId'] = this.pictureId;
-    data['city'] = this.city;
-    data['rating'] = this.rating;
+    data['id'] = id;
+    data['name'] = name;
+    data['description'] = description;
+    data['pictureId'] = pictureId;
+    data['city'] = city;
+    data['rating'] = rating;
     return data;
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:submission_resto/common/style.dart';
 import 'package:submission_resto/data/api/api_service.dart';
-import 'package:submission_resto/data/model/arguments/restoArguments.dart';
+import 'package:submission_resto/data/model/arguments/resto_arguments.dart';
 import 'package:submission_resto/provider/cart_provider.dart';
 import 'package:submission_resto/provider/home_provider.dart';
 import 'package:submission_resto/provider/order_provider.dart';

@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     return Consumer<HomeProvider>(
       builder: (context, state, _) {
         if (state.state == ResultState.loading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else {

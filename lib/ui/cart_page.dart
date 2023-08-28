@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:submission_resto/data/model/arguments/restoArguments.dart';
+import 'package:submission_resto/data/model/arguments/resto_arguments.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
 import 'package:submission_resto/provider/cart_provider.dart';
 import 'package:submission_resto/widget/item_cart_widget.dart';
