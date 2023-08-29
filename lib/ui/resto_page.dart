@@ -6,7 +6,9 @@ import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/get_color_scheme.dart';
 import 'package:submission_resto/data/model/arguments/resto_arguments.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_detail_model.dart';
+import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 import 'package:submission_resto/data/model/transaction/order_model.dart';
+import 'package:submission_resto/provider/database_provider.dart';
 import 'package:submission_resto/provider/order_provider.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/widget/add_to_cart_button.dart';
@@ -15,9 +17,9 @@ import 'package:submission_resto/widget/review_widget.dart';
 
 class RestaurantPage extends StatefulWidget {
   static const routeName = '/resto-page';
-  final String idResto;
+  final RestaurantsShort resto;
 
-  const RestaurantPage({required this.idResto, Key? key}) : super(key: key);
+  const RestaurantPage({required this.resto, Key? key}) : super(key: key);
 
   @override
   State<RestaurantPage> createState() => _RestaurantPageState();
@@ -29,7 +31,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final dataProvider = Provider.of<OrderProvider>(context, listen: false);
-      dataProvider.fetchDetailRestaurant(id: widget.idResto);
+      dataProvider.fetchDetailRestaurant(id: widget.resto.id!);
     });
   }
 
@@ -80,16 +82,28 @@ class _RestaurantPageState extends State<RestaurantPage> {
                       ),
                     ),
                     actions: [
-                      IconButton(
-                        onPressed: () {
-                          state.fav = !state.fav;
+                      Consumer<DatabaseProvider>(
+                        builder: (context, dbProv, _) {
+                          return FutureBuilder<bool>(
+                            future: dbProv.isFavorited(widget.resto.id!),
+                            builder: (context, snapshot) {
+                              var isFavorited = snapshot.data ?? false;
+                              return isFavorited
+                                  ? IconButton(
+                                      icon: Icon(Icons.star),
+                                      color: Colors.amber,
+                                      onPressed: () => dbProv
+                                          .removeFavorite(widget.resto.id!),
+                                    )
+                                  : IconButton(
+                                      icon: Icon(Icons.star_outline),
+                                      color: Colors.amber,
+                                      onPressed: () =>
+                                          dbProv.addFavorite(widget.resto),
+                                    );
+                            },
+                          );
                         },
-                        icon: state.fav
-                            ? Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              )
-                            : Icon(Icons.star_outline),
                       ),
                     ],
                   ),
@@ -139,7 +153,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                   Text(state.message),
                   TextButton(
                     onPressed: () {
-                      state.fetchDetailRestaurant(id: widget.idResto);
+                      state.fetchDetailRestaurant(id: widget.resto.id!);
                     },
                     child: Text('Refresh'),
                   )
@@ -165,7 +179,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                   Text(state.message),
                   TextButton(
                     onPressed: () {
-                      state.fetchDetailRestaurant(id: widget.idResto);
+                      state.fetchDetailRestaurant(id: widget.resto.id!);
                     },
                     child: Text('Refresh'),
                   )
@@ -191,7 +205,8 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     Navigator.pushNamed(
                       context,
                       CartPage.routeName,
-                      arguments: RestoArguments(widget.idResto, order.distinct),
+                      arguments:
+                          RestoArguments(widget.resto.id!, order.distinct),
                     );
                   },
                   restoName: order.restaurantDetail.restaurant.name,

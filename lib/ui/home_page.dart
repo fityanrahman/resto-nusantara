@@ -4,6 +4,7 @@ import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/generate_distinct_cities.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 import 'package:submission_resto/provider/home_provider.dart';
+import 'package:submission_resto/ui/favorite_page.dart';
 import 'package:submission_resto/ui/resto_page.dart';
 import 'package:submission_resto/widget/circle_kota_widget.dart';
 import 'package:submission_resto/widget/fav_resto_widget.dart';
@@ -53,36 +54,44 @@ class _HomePageState extends State<HomePage> {
   Widget _favRestoFAB() {
     return Consumer<HomeProvider>(
       builder: (context, state, _) {
-        return state.isExtendedFAB
-            ? AnimatedSwitcher(
-                duration: Duration(milliseconds: 250),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return AnimatedContainer(
-                      curve: Curves.linear,
-                      duration: Duration(milliseconds: 250),
-                      child: child);
-                },
-                child: FloatingActionButton.extended(
-                  onPressed: () {},
-                  key: ValueKey<bool>(state.isExtendedFAB),
-                  icon: const Icon(Icons.star),
-                  label: const Text('Bookmark'),
-                ),
-              )
-            : AnimatedSwitcher(
-                duration: Duration(milliseconds: 250),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return AnimatedContainer(
-                      curve: Curves.linear,
-                      duration: Duration(milliseconds: 250),
-                      child: child);
-                },
-                child: FloatingActionButton(
-                  onPressed: () {},
-                  key: ValueKey<bool>(state.isExtendedFAB),
-                  child: const Icon(Icons.star),
-                ),
-              );
+        return state.state == ResultState.hasData
+            ? state.isExtendedFAB
+                ? AnimatedSwitcher(
+                    duration: Duration(milliseconds: 250),
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
+                      return AnimatedContainer(
+                          curve: Curves.linear,
+                          duration: Duration(milliseconds: 250),
+                          child: child);
+                    },
+                    child: FloatingActionButton.extended(
+                      onPressed: () {
+                        Navigator.pushNamed(context, FavoritePage.routeName);
+                      },
+                      key: ValueKey<bool>(state.isExtendedFAB),
+                      icon: const Icon(Icons.star),
+                      label: const Text('Favorites'),
+                    ),
+                  )
+                : AnimatedSwitcher(
+                    duration: Duration(milliseconds: 250),
+                    transitionBuilder:
+                        (Widget child, Animation<double> animation) {
+                      return AnimatedContainer(
+                          curve: Curves.linear,
+                          duration: Duration(milliseconds: 250),
+                          child: child);
+                    },
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, FavoritePage.routeName);
+                      },
+                      key: ValueKey<bool>(state.isExtendedFAB),
+                      child: const Icon(Icons.star),
+                    ),
+                  )
+            : SizedBox();
       },
     );
   }
@@ -201,7 +210,7 @@ class _HomePageState extends State<HomePage> {
               child: InkWell(
                 onTap: () {
                   Navigator.pushNamed(context, RestaurantPage.routeName,
-                      arguments: restaurants[index].id);
+                      arguments: restaurants[index]);
                 },
                 child: ListRestoWidget(
                   restaurants: restaurants[index],
@@ -245,7 +254,7 @@ class _HomePageState extends State<HomePage> {
                 child: InkWell(
                   onTap: () {
                     Navigator.pushNamed(context, RestaurantPage.routeName,
-                        arguments: cityRestaurants[index].id);
+                        arguments: cityRestaurants[index]);
                   },
                   child: FavRestoWidget(
                     restaurants: cityRestaurants[index],
