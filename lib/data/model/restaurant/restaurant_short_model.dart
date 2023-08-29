@@ -24,6 +24,15 @@ class RestaurantsShort {
     rating = json['rating'].toDouble();
   }
 
+  RestaurantsShort.fromJsonAlt(json) {
+    id = json['id'];
+    name = json['name'];
+    description = json['description'];
+    pictureId = json['pictureId'];
+    city = json['city'];
+    rating = json['rating'].toDouble();
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = id;

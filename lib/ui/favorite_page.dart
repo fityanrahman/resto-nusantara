@@ -6,7 +6,7 @@ import 'package:submission_resto/ui/resto_page.dart';
 import 'package:submission_resto/widget/list_resto_widget.dart';
 
 class FavoritePage extends StatelessWidget {
-  static const String favoriteTitle = 'Favorites';
+  static const String favoriteTitle = 'Favorit';
   static const routeName = '/favorite-page';
 
   const FavoritePage({super.key});

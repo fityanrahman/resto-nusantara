@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/generate_distinct_cities.dart';
+import 'package:submission_resto/common/utils/notification_helper.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 import 'package:submission_resto/provider/home_provider.dart';
 import 'package:submission_resto/ui/favorite_page.dart';
 import 'package:submission_resto/ui/resto_page.dart';
+import 'package:submission_resto/ui/setting_page.dart';
 import 'package:submission_resto/widget/circle_kota_widget.dart';
 import 'package:submission_resto/widget/fav_resto_widget.dart';
 import 'package:submission_resto/widget/list_resto_widget.dart';
@@ -21,6 +23,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final NotificationHelper _notificationHelper = NotificationHelper();
+
   ScrollController _scrollController = ScrollController();
 
   @override
@@ -28,6 +32,8 @@ class _HomePageState extends State<HomePage> {
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
 
     super.initState();
+    _notificationHelper
+        .configureSelectNotificationSubject(RestaurantPage.routeName);
     _scrollController.addListener(() {
       if (_scrollController.offset > 50) {
         homeProvider.isExtendedFAB = false;
@@ -71,7 +77,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       key: ValueKey<bool>(state.isExtendedFAB),
                       icon: const Icon(Icons.star),
-                      label: const Text('Favorites'),
+                      label: const Text('Favorit'),
                     ),
                   )
                 : AnimatedSwitcher(
@@ -172,13 +178,33 @@ class _HomePageState extends State<HomePage> {
         return ListView(
           controller: _scrollController,
           children: [
-            SearchAnchors(),
+            _searchSettingBar(),
             _listKota(cities, textTheme, homeProvider),
             _listFavResto(cityRestaurants, textTheme),
             _listRestoNusa(restaurants, textTheme)
           ],
         );
       },
+    );
+  }
+
+  Widget _searchSettingBar() {
+    return Flex(
+      direction: Axis.horizontal,
+      children: [
+        Expanded(child: SearchAnchors()),
+        IconButton(
+          iconSize: 8,
+          padding: EdgeInsets.only(right: 16),
+          onPressed: () {
+            Navigator.pushNamed(context, SettingsPage.routeName);
+          },
+          icon: Icon(
+            Icons.settings,
+            size: 24,
+          ),
+        )
+      ],
     );
   }
 

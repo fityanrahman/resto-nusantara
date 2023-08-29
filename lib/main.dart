@@ -1,24 +1,48 @@
+import 'dart:io';
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:submission_resto/common/Navigation.dart';
 import 'package:submission_resto/common/style.dart';
+import 'package:submission_resto/common/utils/background_service.dart';
+import 'package:submission_resto/common/utils/notification_helper.dart';
 import 'package:submission_resto/data/api/api_service.dart';
 import 'package:submission_resto/data/db/database_helper.dart';
 import 'package:submission_resto/data/model/arguments/resto_arguments.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
+import 'package:submission_resto/data/preferences/preferences_helper.dart';
 import 'package:submission_resto/provider/cart_provider.dart';
 import 'package:submission_resto/provider/database_provider.dart';
 import 'package:submission_resto/provider/home_provider.dart';
 import 'package:submission_resto/provider/order_provider.dart';
+import 'package:submission_resto/provider/preferences_provider.dart';
+import 'package:submission_resto/provider/scheduling_provider.dart';
 import 'package:submission_resto/provider/search_provider.dart';
 import 'package:submission_resto/ui/cart_page.dart';
 import 'package:submission_resto/ui/favorite_page.dart';
 import 'package:submission_resto/ui/home_page.dart';
 import 'package:submission_resto/ui/resto_page.dart';
+import 'package:submission_resto/ui/setting_page.dart';
 
-void main() {
-  runApp(
-    MyApp(),
-  );
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final NotificationHelper _notificationHelper = NotificationHelper();
+  final BackgroundService _service = BackgroundService();
+
+  _service.initializationIsolate();
+
+  if (Platform.isAndroid) {
+    await AndroidAlarmManager.initialize();
+  }
+  await _notificationHelper.initNotification(flutterLocalNotificationsPlugin);
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -39,13 +63,22 @@ class MyApp extends StatelessWidget {
             create: (context) => CartProvider()),
         ChangeNotifierProvider<DatabaseProvider>(
             create: (context) =>
-                DatabaseProvider(databaseHelper: DatabaseHelper()))
+                DatabaseProvider(databaseHelper: DatabaseHelper())),
+        ChangeNotifierProvider<PreferencesProvider>(
+          create: (context) => PreferencesProvider(
+            preferencesHelper: PreferencesHelper(
+                sharedPreferences: SharedPreferences.getInstance()),
+          ),
+        ),
+        ChangeNotifierProvider<SchedulingProvider>(
+            create: (_) => SchedulingProvider()),
       ],
       child: MaterialApp(
         title: 'Restoran Nusantara',
         themeMode: themeMode,
         theme: lightTheme,
         darkTheme: darkTheme,
+        navigatorKey: navigatorKey,
         initialRoute: HomePage.routeName,
         routes: {
           HomePage.routeName: (context) => const HomePage(),
@@ -58,6 +91,7 @@ class MyApp extends StatelessWidget {
                     as RestoArguments,
               ),
           FavoritePage.routeName: (context) => const FavoritePage(),
+          SettingsPage.routeName: (context) => const SettingsPage(),
         },
       ),
     );
