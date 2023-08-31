@@ -18,9 +18,9 @@ class OrderProvider extends ChangeNotifier {
   List<Order> _orderFood = [];
   List<Order> _orderDrink = [];
 
-  List<Order> _transaksi = [];
-  var _idSet = <String>{};
-  List<Order> _distinct = [];
+  final List<Order> _transaksi = [];
+  final _idSet = <String>{};
+  final List<Order> _distinct = [];
   int _itemCount = 0;
   int _amount = 0;
 

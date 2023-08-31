@@ -25,7 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final NotificationHelper _notificationHelper = NotificationHelper();
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -63,12 +63,12 @@ class _HomePageState extends State<HomePage> {
         return state.state == ResultState.hasData
             ? state.isExtendedFAB
                 ? AnimatedSwitcher(
-                    duration: Duration(milliseconds: 250),
+                    duration: const Duration(milliseconds: 250),
                     transitionBuilder:
                         (Widget child, Animation<double> animation) {
                       return AnimatedContainer(
                           curve: Curves.linear,
-                          duration: Duration(milliseconds: 250),
+                          duration: const Duration(milliseconds: 250),
                           child: child);
                     },
                     child: FloatingActionButton.extended(
@@ -81,12 +81,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )
                 : AnimatedSwitcher(
-                    duration: Duration(milliseconds: 250),
+                    duration: const Duration(milliseconds: 250),
                     transitionBuilder:
                         (Widget child, Animation<double> animation) {
                       return AnimatedContainer(
                           curve: Curves.linear,
-                          duration: Duration(milliseconds: 250),
+                          duration: const Duration(milliseconds: 250),
                           child: child);
                     },
                     child: FloatingActionButton(
@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                       child: const Icon(Icons.star),
                     ),
                   )
-            : SizedBox();
+            : const SizedBox();
       },
     );
   }
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
     final homeProvider = Provider.of<HomeProvider>(context, listen: false);
     List<RestaurantsShort> restaurants = [];
     List<RestaurantsShort> cityRestaurants = [];
-    late var cities;
+    late List<String> cities;
 
     return Consumer<HomeProvider>(
       builder: (context, state, _) {
@@ -142,13 +142,13 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.network_check),
+                    const Icon(Icons.network_check),
                     Text(state.message),
                     TextButton(
                       onPressed: () async {
                         state.fetchAllRestaurant();
                       },
-                      child: Text('Refresh'),
+                      child: const Text('Refresh'),
                     )
                   ],
                 ),
@@ -160,13 +160,13 @@ class _HomePageState extends State<HomePage> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.warning),
+                    const Icon(Icons.warning),
                     Text(state.message),
                     TextButton(
                       onPressed: () async {
                         state.fetchAllRestaurant();
                       },
-                      child: Text('Refresh'),
+                      child: const Text('Refresh'),
                     )
                   ],
                 ),
@@ -192,14 +192,14 @@ class _HomePageState extends State<HomePage> {
     return Flex(
       direction: Axis.horizontal,
       children: [
-        Expanded(child: SearchAnchors()),
+        const Expanded(child: SearchAnchors()),
         IconButton(
           iconSize: 8,
-          padding: EdgeInsets.only(right: 16),
+          padding: const EdgeInsets.only(right: 16),
           onPressed: () {
             Navigator.pushNamed(context, SettingsPage.routeName);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.settings,
             size: 24,
           ),
@@ -214,7 +214,7 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 28, bottom: 16, left: 16.0),
+          padding: const EdgeInsets.only(top: 28, bottom: 16, left: 16.0),
           child: Text(
             'Restoran Nusantara',
             style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500),

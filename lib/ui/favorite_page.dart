@@ -22,7 +22,7 @@ class FavoritePage extends StatelessWidget {
           if (state.state == ResultState.hasData) {
             return ListView.separated(
               separatorBuilder: (context, index) {
-                return SizedBox(
+                return const SizedBox(
                   height: 16,
                 );
               },

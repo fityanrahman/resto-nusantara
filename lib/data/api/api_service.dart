@@ -26,7 +26,7 @@ class ApiService {
             ResultState.error);
       }
     } on SocketException {
-      throw SocketException(errorInternet);
+      throw const SocketException(errorInternet);
     } on TimeoutException {
       throw TimeoutException(errorTimeout);
     }
@@ -45,7 +45,7 @@ class ApiService {
             'Gagal memuat detail restoran', ResultState.error);
       }
     } on SocketException {
-      throw SocketException(errorInternet);
+      throw const SocketException(errorInternet);
     } on TimeoutException {
       throw TimeoutException(errorTimeout);
     }
@@ -64,7 +64,7 @@ class ApiService {
             'Gagal memuat pencarian restoran', ResultState.error);
       }
     } on SocketException {
-      throw SocketException(errorInternet);
+      throw const SocketException(errorInternet);
     } on TimeoutException {
       throw TimeoutException(errorTimeout);
     }
@@ -93,7 +93,7 @@ class ApiService {
         throw CustomException('Gagal memuat ulasan', ResultState.error);
       }
     } on SocketException {
-      throw SocketException(errorInternet);
+      throw const SocketException(errorInternet);
     } on TimeoutException {
       throw TimeoutException(errorTimeout);
     }

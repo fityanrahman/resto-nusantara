@@ -67,7 +67,7 @@ class _ItemRestoWidgetState extends State<ItemCartWidget> {
       ),
       title: Text(
         widget.order.name,
-        style: TextStyle(fontWeight: FontWeight.w500),
+        style: const TextStyle(fontWeight: FontWeight.w500),
       ),
       subtitle: Text(
         '${widget.order.qty} x Rp ${widget.order.price.toString()}',

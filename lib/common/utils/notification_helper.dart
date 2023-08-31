@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:submission_resto/common/Navigation.dart';
+import 'package:submission_resto/common/navigation.dart';
 import 'package:submission_resto/data/model/restaurant/list_restaurant_model.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 
@@ -38,7 +39,9 @@ class NotificationHelper {
         onDidReceiveNotificationResponse: (NotificationResponse details) async {
       final payload = details.payload;
       if (payload != null) {
-        print('notification payload: ' + payload);
+        if (kDebugMode) {
+          print('notification payload: $payload');
+        }
       }
       selectNotificationSubject.add(payload ?? 'empty payload');
     });

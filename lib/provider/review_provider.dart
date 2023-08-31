@@ -24,7 +24,7 @@ class ReviewProvider extends ChangeNotifier {
 
   ResultState _state = ResultState.loading;
   String _message = '';
-  bool _error = false;
+  final bool _error = false;
 
   ResultState get state => _state;
 

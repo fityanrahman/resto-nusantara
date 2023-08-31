@@ -3,9 +3,9 @@ import 'package:submission_resto/data/model/transaction/order_model.dart';
 
 class CartProvider extends ChangeNotifier {
   bool _isOngkirReg = true;
-  int _ongkirReg = 12000;
-  int _ongkirHemat = 5000;
-  int _biayaLayanan = 4000;
+  final int _ongkirReg = 12000;
+  final int _ongkirHemat = 5000;
+  final int _biayaLayanan = 4000;
 
   int _harga = 0;
   int _ongkir = 12000;

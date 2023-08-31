@@ -44,7 +44,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
       body: Consumer<OrderProvider>(builder: (context, state, _) {
         switch (state.state) {
           case ResultState.loading:
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           case ResultState.hasData:
@@ -90,13 +90,13 @@ class _RestaurantPageState extends State<RestaurantPage> {
                               var isFavorited = snapshot.data ?? false;
                               return isFavorited
                                   ? IconButton(
-                                      icon: Icon(Icons.star),
+                                      icon: const Icon(Icons.star),
                                       color: Colors.amber,
                                       onPressed: () => dbProv
                                           .removeFavorite(widget.resto.id!),
                                     )
                                   : IconButton(
-                                      icon: Icon(Icons.star_outline),
+                                      icon: const Icon(Icons.star_outline),
                                       color: Colors.amber,
                                       onPressed: () =>
                                           dbProv.addFavorite(widget.resto),
@@ -149,13 +149,13 @@ class _RestaurantPageState extends State<RestaurantPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.network_check),
+                  const Icon(Icons.network_check),
                   Text(state.message),
                   TextButton(
                     onPressed: () {
                       state.fetchDetailRestaurant(id: widget.resto.id!);
                     },
-                    child: Text('Refresh'),
+                    child: const Text('Refresh'),
                   )
                 ],
               ),
@@ -165,7 +165,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.timer_off),
+                  const Icon(Icons.timer_off),
                   Text(state.message),
                 ],
               ),
@@ -175,13 +175,13 @@ class _RestaurantPageState extends State<RestaurantPage> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.warning),
+                  const Icon(Icons.warning),
                   Text(state.message),
                   TextButton(
                     onPressed: () {
                       state.fetchDetailRestaurant(id: widget.resto.id!);
                     },
-                    child: Text('Refresh'),
+                    child: const Text('Refresh'),
                   )
                 ],
               ),
@@ -195,7 +195,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
 
   Widget _lanjutBayar(BuildContext context) {
     return Consumer<OrderProvider>(builder: (context, order, _) {
-      return order.distinct.length >= 1
+      return order.distinct.isNotEmpty
           ? Padding(
               padding: const EdgeInsets.all(16),
               child: SizedBox(
@@ -215,7 +215,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
                 ),
               ),
             )
-          : SizedBox();
+          : const SizedBox();
     });
   }
 
@@ -230,12 +230,13 @@ class _RestaurantPageState extends State<RestaurantPage> {
             'Ulasan pelanggan',
             style: textTheme.titleMedium,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
-          customerReviews.length >= 1
+          customerReviews.isNotEmpty
               ? ListView.builder(
-                  padding: EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+                  padding:
+                      const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: customerReviews.length,
@@ -264,7 +265,7 @@ class _RestaurantPageState extends State<RestaurantPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 28.0, bottom: 16.0),
+            padding: const EdgeInsets.only(top: 28.0, bottom: 16.0),
             child: Text(
               'Detail Restoran',
               style: textTheme.titleMedium,
@@ -297,18 +298,18 @@ class _RestaurantPageState extends State<RestaurantPage> {
                     Icons.star,
                     size: 16,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(rating.toString()),
                 ],
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Row(
                 children: [
                   const Icon(
                     Icons.location_on,
                     size: 16,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(location.toString()),
                 ],
               ),
@@ -331,11 +332,11 @@ class _RestaurantPageState extends State<RestaurantPage> {
             type,
             style: textTheme.titleMedium,
           ),
-          SizedBox(
+          const SizedBox(
             height: 8,
           ),
           ListView.builder(
-            padding: EdgeInsets.only(bottom: 16.0),
+            padding: const EdgeInsets.only(bottom: 16.0),
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: food.length,

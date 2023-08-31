@@ -8,7 +8,7 @@ import 'package:submission_resto/ui/home_page.dart';
 class OrderDialog extends StatelessWidget {
   final String idResto;
 
-  OrderDialog({required this.idResto, super.key});
+  const OrderDialog({required this.idResto, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class OrderDialog extends StatelessWidget {
                 nama = value;
               },
             ),
-            SizedBox(
+            const SizedBox(
               height: 4,
             ),
             TextField(
@@ -83,12 +83,12 @@ class OrderDialog extends StatelessWidget {
   Widget _dialogReview() {
     return Consumer<ReviewProvider>(builder: (contextReview, state, _) {
       if (state.state == ResultState.loading) {
-        return AlertDialog(
+        return const AlertDialog(
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               CircularProgressIndicator(),
-              const Text('Mengirim ulasan... '),
+              Text('Mengirim ulasan... '),
             ],
           ),
         );

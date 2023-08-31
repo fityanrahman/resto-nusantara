@@ -11,12 +11,12 @@ class Restaurants {
 
   Restaurants(
       {this.id,
-        this.name,
-        this.description,
-        this.pictureId,
-        this.city,
-        this.rating,
-        this.menus});
+      this.name,
+      this.description,
+      this.pictureId,
+      this.city,
+      this.rating,
+      this.menus});
 
   Restaurants.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -25,19 +25,19 @@ class Restaurants {
     pictureId = json['pictureId'];
     city = json['city'];
     rating = json['rating'].toDouble();
-    menus = json['menus'] != null ? new Menus.fromJson(json['menus']) : null;
+    menus = json['menus'] != null ? Menus.fromJson(json['menus']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['description'] = this.description;
-    data['pictureId'] = this.pictureId;
-    data['city'] = this.city;
-    data['rating'] = this.rating;
-    if (this.menus != null) {
-      data['menus'] = this.menus!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['description'] = description;
+    data['pictureId'] = pictureId;
+    data['city'] = city;
+    data['rating'] = rating;
+    if (menus != null) {
+      data['menus'] = menus!.toJson();
     }
     return data;
   }

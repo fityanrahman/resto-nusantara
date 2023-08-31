@@ -41,9 +41,9 @@ class AddToCartButton extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Text('Rp ${amount}'),
-                SizedBox(width: 8),
-                Icon(Icons.shopping_cart),
+                Text('Rp $amount'),
+                const SizedBox(width: 8),
+                const Icon(Icons.shopping_cart),
               ],
             ),
           ),

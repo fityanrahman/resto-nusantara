@@ -50,8 +50,7 @@ class _SearchAnchorsState extends State<SearchAnchors> {
     String message = '';
     List<RestaurantsShort> suggestResult = [];
 
-    final searchProvider =
-        await Provider.of<SearchProvider>(context, listen: false);
+    final searchProvider = Provider.of<SearchProvider>(context, listen: false);
 
     try {
       suggestResult = await searchProvider.searchRestaurant(query: input);
@@ -61,16 +60,16 @@ class _SearchAnchorsState extends State<SearchAnchors> {
 
     if (searchProvider.state == ResultState.loading) {
       return <Widget>[
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.75,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircularProgressIndicator(),
+                const CircularProgressIndicator(),
                 Text(
                   message,
-                  style: TextStyle(color: Colors.grey),
+                  style: const TextStyle(color: Colors.grey),
                 ),
               ],
             ),
@@ -81,15 +80,15 @@ class _SearchAnchorsState extends State<SearchAnchors> {
       return getSuggestions(suggestResult, controller);
     } else {
       return <Widget>[
-        Container(
+        SizedBox(
           height: MediaQuery.of(context).size.height * 0.75,
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 (searchProvider.state == ResultState.networkError)
-                    ? Icon(Icons.network_check)
-                    : Icon(Icons.warning),
+                    ? const Icon(Icons.network_check)
+                    : const Icon(Icons.warning),
                 Text(
                   message,
                   style: textTheme.titleMedium
@@ -167,13 +166,13 @@ class _SearchAnchorsState extends State<SearchAnchors> {
                 return getHistoryList(controller, state.searchHistory, context);
               }
               return <Widget>[
-                Container(
+                SizedBox(
                   height: MediaQuery.of(context).size.height * 0.75,
                   child: Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.find_in_page_rounded),
+                        const Icon(Icons.find_in_page_rounded),
                         Text(
                           'Tidak ada riwayat pencarian.',
                           style: textTheme.titleMedium

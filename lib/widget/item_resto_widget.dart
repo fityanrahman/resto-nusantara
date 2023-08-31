@@ -138,7 +138,7 @@ class ItemRestoWidget extends StatelessWidget {
       ),
       title: Text(
         order.name,
-        style: TextStyle(fontWeight: FontWeight.w500),
+        style: const TextStyle(fontWeight: FontWeight.w500),
       ),
       subtitle: Text(
         'Rp ${order.price.toString()}',

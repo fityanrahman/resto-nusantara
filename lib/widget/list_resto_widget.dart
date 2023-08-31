@@ -22,8 +22,8 @@ class ListRestoWidget extends StatelessWidget {
       height: 100,
       alignment: Alignment.bottomLeft,
       clipBehavior: Clip.hardEdge,
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.all(
           Radius.circular(16),
         ),
       ),
@@ -68,7 +68,7 @@ class ListRestoWidget extends StatelessWidget {
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 Text(restaurants.city!),
                 Row(
                   children: [
@@ -76,7 +76,7 @@ class ListRestoWidget extends StatelessWidget {
                       Icons.star,
                       size: 16,
                     ),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(restaurants.rating.toString()),
                   ],
                 )

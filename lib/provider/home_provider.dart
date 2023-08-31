@@ -15,7 +15,7 @@ class HomeProvider extends ChangeNotifier {
   }
 
   List<RestaurantsShort> _restaurants = [];
-  List<RestaurantsShort> _cityRestaurants = [];
+  final List<RestaurantsShort> _cityRestaurants = [];
   late ResultState _state;
   String _message = '';
   String _city = 'Nusantara';

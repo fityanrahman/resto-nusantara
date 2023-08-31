@@ -5,7 +5,7 @@ class UserReview extends StatelessWidget {
   final TextTheme textTheme;
   final CustomerReview customerReview;
 
-  UserReview(
+  const UserReview(
       {required this.textTheme, required this.customerReview, super.key});
 
   @override
@@ -32,7 +32,7 @@ class UserReview extends StatelessWidget {
             customerReview.date,
             style: textTheme.labelSmall,
           ),
-          SizedBox(
+          const SizedBox(
             height: 4,
           ),
           Text(

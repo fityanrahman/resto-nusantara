@@ -18,11 +18,11 @@ class Menus {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    if (this.foods != null) {
-      data['foods'] = this.foods!.map((v) => v.toJson()).toList();
+    if (foods != null) {
+      data['foods'] = foods!.map((v) => v.toJson()).toList();
     }
-    if (this.drinks != null) {
-      data['drinks'] = this.drinks!.map((v) => v.toJson()).toList();
+    if (drinks != null) {
+      data['drinks'] = drinks!.map((v) => v.toJson()).toList();
     }
     return data;
   }

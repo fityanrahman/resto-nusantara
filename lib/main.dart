@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:submission_resto/common/Navigation.dart';
+import 'package:submission_resto/common/navigation.dart';
 import 'package:submission_resto/common/style.dart';
 import 'package:submission_resto/common/utils/background_service.dart';
 import 'package:submission_resto/common/utils/notification_helper.dart';
@@ -33,15 +33,15 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final NotificationHelper _notificationHelper = NotificationHelper();
-  final BackgroundService _service = BackgroundService();
+  final NotificationHelper notificationHelper = NotificationHelper();
+  final BackgroundService service = BackgroundService();
 
-  _service.initializationIsolate();
+  service.initializationIsolate();
 
   if (Platform.isAndroid) {
     await AndroidAlarmManager.initialize();
   }
-  await _notificationHelper.initNotification(flutterLocalNotificationsPlugin);
+  await notificationHelper.initNotification(flutterLocalNotificationsPlugin);
   runApp(const MyApp());
 }
 

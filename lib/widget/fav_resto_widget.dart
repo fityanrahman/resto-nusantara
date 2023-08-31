@@ -23,8 +23,8 @@ class FavRestoWidget extends StatelessWidget {
         height: 280,
         alignment: Alignment.bottomLeft,
         clipBehavior: Clip.hardEdge,
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(
             Radius.circular(24),
           ),
         ),
@@ -73,16 +73,16 @@ class FavRestoWidget extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(restaurants.city!),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Row(
                     children: [
                       const Icon(
                         Icons.star,
                         size: 16,
                       ),
-                      SizedBox(width: 4),
+                      const SizedBox(width: 4),
                       Text(restaurants.rating.toString()),
                     ],
                   )
