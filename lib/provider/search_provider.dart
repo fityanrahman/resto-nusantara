@@ -7,6 +7,7 @@ import 'package:submission_resto/common/funs/custom_exception.dart';
 import 'package:submission_resto/data/api/api_service.dart';
 import 'package:submission_resto/data/model/restaurant/restaurant_short_model.dart';
 import 'package:submission_resto/data/model/restaurant/search_restaurant_model.dart';
+import 'package:http/http.dart' as http;
 
 class SearchProvider extends ChangeNotifier {
   late ResultState _state;
@@ -26,6 +27,8 @@ class SearchProvider extends ChangeNotifier {
   }
 
   Future<dynamic> searchRestaurant({required String query}) async {
+    final http.Client httpClient = http.Client();
+
     try {
       _state = ResultState.loading;
       _message = 'Memuat pencarian data';
@@ -34,7 +37,8 @@ class SearchProvider extends ChangeNotifier {
       _searchList.clear();
 
       final SearchRestaurant restaurants =
-          await ApiService().searchRestaurant(query: query);
+          await ApiService(httpClient: httpClient)
+              .searchRestaurant(query: query);
 
       if (restaurants.restaurantsShort.isEmpty) {
         _state = ResultState.noData;

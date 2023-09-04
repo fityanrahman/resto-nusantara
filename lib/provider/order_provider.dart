@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:submission_resto/common/const_api.dart';
@@ -62,6 +63,8 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<dynamic> fetchDetailRestaurant({required String id}) async {
+    final http.Client httpClient = http.Client();
+
     try {
       _state = ResultState.loading;
       notifyListeners();
@@ -69,7 +72,7 @@ class OrderProvider extends ChangeNotifier {
       _clearOrderDatas();
 
       final RestaurantDetail restaurant =
-          await ApiService().getDetailRestaurant(id: id);
+          await ApiService(httpClient: httpClient).getDetailRestaurant(id: id);
       _orderFood = generateListOrder(
         restaurant.restaurant.menus.foods,
         'Makanan',

@@ -4,6 +4,7 @@ import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/data/api/api_service.dart';
 import 'package:submission_resto/provider/review_provider.dart';
 import 'package:submission_resto/ui/home_page.dart';
+import 'package:http/http.dart' as http;
 
 class OrderDialog extends StatelessWidget {
   final String idResto;
@@ -12,6 +13,8 @@ class OrderDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final http.Client httpClient = http.Client();
+
     String review = '';
     String nama = '';
 
@@ -66,7 +69,7 @@ class OrderDialog extends StatelessWidget {
                   context: context,
                   builder: (BuildContext context) => ChangeNotifierProvider(
                         create: (_) => ReviewProvider(
-                            apiService: ApiService(),
+                            apiService: ApiService(httpClient: httpClient),
                             nama: nama,
                             review: review,
                             id: idResto),

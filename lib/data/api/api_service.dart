@@ -11,14 +11,18 @@ import 'package:submission_resto/data/model/restaurant/restaurant_detail_model.d
 import 'package:submission_resto/data/model/restaurant/search_restaurant_model.dart';
 
 class ApiService {
+  final http.Client httpClient;
+
+  ApiService({required this.httpClient});
+
   Future<ListRestaurant> getListRestaurants() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl$listResto'));
+      final response = await httpClient.get(Uri.parse('$baseUrl$listResto'));
 
       final statusCode = response.statusCode;
-      final result = jsonDecode(response.body);
 
       if (statusCode == 200) {
+        final result = jsonDecode(response.body);
         return ListRestaurant.fromJson(result);
       } else {
         throw CustomException(

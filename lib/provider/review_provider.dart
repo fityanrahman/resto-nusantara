@@ -6,6 +6,7 @@ import 'package:submission_resto/common/const_api.dart';
 import 'package:submission_resto/common/funs/custom_exception.dart';
 import 'package:submission_resto/data/api/api_service.dart';
 import 'package:submission_resto/data/model/restaurant/add_review_model.dart';
+import 'package:http/http.dart' as http;
 
 class ReviewProvider extends ChangeNotifier {
   final ApiService apiService;
@@ -37,6 +38,8 @@ class ReviewProvider extends ChangeNotifier {
     required String nama,
     required String review,
   }) async {
+    final http.Client httpClient = http.Client();
+
     try {
       if (_state != ResultState.loading) {
         _state = ResultState.loading;
@@ -44,8 +47,8 @@ class ReviewProvider extends ChangeNotifier {
         notifyListeners();
       }
 
-      final AddReview addReview =
-          await ApiService().postReview(id: id, nama: nama, review: review);
+      final AddReview addReview = await ApiService(httpClient: httpClient)
+          .postReview(id: id, nama: nama, review: review);
       if (addReview.error) {
         _state = ResultState.noData;
         notifyListeners();

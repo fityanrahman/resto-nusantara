@@ -1,4 +1,6 @@
-class RestaurantsShort {
+import 'package:equatable/equatable.dart';
+
+class RestaurantsShort extends Equatable {
   String? id;
   String? name;
   String? description;
@@ -43,4 +45,13 @@ class RestaurantsShort {
     data['rating'] = rating;
     return data;
   }
+
+  //untuk memudahkan debug (print/log)
+  @override
+  String toString() {
+    return 'RestaurantsShort{id: $id, name: $name, description: $description, pictureId: $pictureId, city: $city, rating: $rating}';
+  }
+
+  @override
+  List<Object?> get props => [id, name, description, pictureId, city, rating];
 }

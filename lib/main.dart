@@ -26,6 +26,7 @@ import 'package:submission_resto/ui/favorite_page.dart';
 import 'package:submission_resto/ui/home_page.dart';
 import 'package:submission_resto/ui/resto_page.dart';
 import 'package:submission_resto/ui/setting_page.dart';
+import 'package:http/http.dart' as http;
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -50,10 +51,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final http.Client httpClient = http.Client();
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<HomeProvider>(
-          create: (context) => HomeProvider(apiService: ApiService()),
+          create: (context) => HomeProvider(apiService: ApiService(httpClient: httpClient)),
         ),
         ChangeNotifierProvider<OrderProvider>(
             create: (context) => OrderProvider()),

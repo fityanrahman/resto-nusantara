@@ -10,8 +10,8 @@ class CustomException implements Exception {
     this.state,
   );
 
-  @override
-  String toString() {
-    return message;
-  }
+  // @override
+  // String toString() {
+  //   return message;
+  // }
 }
